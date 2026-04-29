@@ -1,0 +1,1546 @@
+<html lang="th" style="--primary: #7C6244; --accent: #C4956A; --bg: #F8F5F0; --bg2: #EBE7DF; --border: #E6DDD0; --text: #2C2418; --text2: #7A6A58; --text3: #7A6A5888; --surface: #ffffff; --surface2: #EBE7DF; --primary-light: #C4956A; --shadow: #7C624422;"><head><script id="static-data-inject">window.__STATIC_DATA__={"profile":{"name":"ZenTum","bio":"Cozy Desk setup | Cozy Room","subtitle":"พิกัดของใช้ในห้องของเรา","avatarUrl":"","coverUrl":""},"socials":[{"id":"s1","platform":"instagram","label":"Instagram","url":"#"},{"id":"s2","platform":"tiktok","label":"TikTok","url":"#"},{"id":"s3","platform":"youtube","label":"YouTube","url":"#"},{"id":"s4","platform":"facebook","label":"Facebook","url":"#"},{"id":"s5","platform":"line","label":"LINE","url":"#"}],"categories":[{"id":"cat1","name":"Desksetup","emoji":"🖥️","visible":true,"products":[{"id":"p1","name":"Desk","imageUrl":"","affiliateUrl":"#","description":""},{"id":"p2","name":"MSI 2k Monitor","imageUrl":"","affiliateUrl":"#","description":""},{"id":"p3","name":"Light Bar","imageUrl":"","affiliateUrl":"#","description":""},{"id":"p4","name":"Speaker","imageUrl":"","affiliateUrl":"#","description":""},{"id":"p5","name":"Logitech Mouse","imageUrl":"","affiliateUrl":"#","description":""},{"id":"p6","name":"Aula F75","imageUrl":"","affiliateUrl":"#","description":""}]},{"id":"cat2","name":"Gadget, Charger","emoji":"⚡","visible":true,"products":[]},{"id":"cat3","name":"Decor, Light & Aroma","emoji":"🕯️","visible":true,"products":[]},{"id":"cat4","name":"เครื่องใช้ & Samsung","emoji":"📱","visible":true,"products":[]},{"id":"cat1777478471659","name":"หมวดหมู่ใหม่","emoji":"📦","visible":true,"products":[]}],"theme":{"preset":"nature","primaryColor":"#7C6244","bgColor":"#F8F5F0"},"settings":{"password":"zentum","siteTitle":"ZenTum"},"analytics":{"views":[],"clicks":[],"referrers":[]}};</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="ZenTum - Cozy Desk setup | Cozy Room">
+  <title id="page-title">ZenTum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F5F0;
+      --bg2: #EBE7DF;
+      --surface: #FFFFFF;
+      --surface2: #F2EDE6;
+      --primary: #7C6244;
+      --primary-light: #A0845C;
+      --text: #2C2418;
+      --text2: #7A6A58;
+      --text3: #B0A090;
+      --border: #E6DDD0;
+      --shadow: rgba(124,98,68,0.11);
+      --accent: #C4956A;
+      --green: #6B8A64;
+      --green-light: #EAF1E7;
+      --green-mid: #C2D9BC;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-lg: 24px;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter','Noto Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+    /* ===== TOAST ===== */
+    #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--text);color:#fff;padding:11px 22px;border-radius:50px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s ease;white-space:nowrap;pointer-events:none}
+    #toast.show{transform:translateX(-50%) translateY(0)}
+
+    /* ===== MODAL ===== */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:1000;display:flex;align-items:flex-end;justify-content:center}
+    @media(min-width:600px){.modal-overlay{align-items:center;padding:20px}}
+    .modal{background:var(--surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:24px 20px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:slideUp .28s ease}
+    @media(min-width:600px){.modal{border-radius:var(--radius-lg)}}
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .modal-title{font-size:18px;font-weight:700;color:var(--text)}
+    .modal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--bg2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+
+    /* ===== BUTTONS ===== */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:inherit}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:var(--primary-light);transform:translateY(-1px)}
+    .btn-secondary{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+    .btn-secondary:hover{background:var(--bg2)}
+    .btn-danger{background:#fee2e2;color:#dc2626;border:1.5px solid #fecaca}
+    .btn-danger:hover{background:#fecaca}
+    .btn-sm{padding:7px 14px;font-size:12px;border-radius:8px}
+    .btn-block{width:100%}
+    .icon-btn{width:28px;height:28px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;font-family:inherit}
+    .icon-btn-edit{background:rgba(255,255,255,.92);color:var(--primary)}
+    .icon-btn-del{background:rgba(220,38,38,.88);color:#fff}
+
+    /* ===== FORM ===== */
+    .form-group{margin-bottom:14px}
+    .form-group label,.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px}
+    .form-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:var(--bg);color:var(--text);outline:none;transition:border-color .2s;font-family:inherit}
+    .form-input:focus{border-color:var(--primary)}
+    textarea.form-input{resize:vertical;min-height:72px}
+    select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237A6A58' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+    .help-text{font-size:11px;color:var(--text3);margin-top:4px}
+    .switch{position:relative;width:44px;height:24px;flex-shrink:0}
+    .switch input{opacity:0;width:0;height:0}
+    .switch-slider{position:absolute;inset:0;background:var(--border);border-radius:50px;cursor:pointer;transition:.2s}
+    .switch-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+    .switch input:checked+.switch-slider{background:var(--primary)}
+    .switch input:checked+.switch-slider::before{transform:translateX(20px)}
+
+    /* ===== CARD ===== */
+    .card{background:var(--surface);border-radius:var(--radius);padding:20px;margin-bottom:16px;border:1px solid var(--border)}
+    .card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px}
+
+    /* ===== PUBLIC PAGE ===== */
+    #public-page{min-height:100vh}
+    .pub-cover{width:100%;height:190px;background:linear-gradient(145deg,#4A3020 0%,var(--primary) 55%,#9A7B48 100%);background-size:cover;background-position:center;position:relative}
+    .pub-profile{padding:0 20px 16px;background:var(--surface)}
+    .pub-avatar-wrap{margin-top:-46px;margin-bottom:10px;display:flex;align-items:flex-end;justify-content:space-between}
+    .pub-avatar{width:88px;height:88px;border-radius:50%;border:4px solid var(--surface);background:var(--bg2);object-fit:cover;box-shadow:0 4px 16px var(--shadow)}
+    .pub-name{font-size:21px;font-weight:800;color:var(--text);margin-bottom:3px}
+    .pub-bio{font-size:13px;color:var(--text2);line-height:1.5}
+    .pub-subtitle{font-size:12px;color:var(--text3);margin-top:2px}
+    .socials-row{padding:14px 20px 14px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+    .social-pill{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface2);border-radius:50px;text-decoration:none;color:var(--text);font-size:12px;font-weight:600;transition:all .2s;border:1.5px solid var(--border)}
+    .social-pill:hover,.social-pill:active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .social-pill svg{flex-shrink:0}
+
+    /* Category tabs */
+    .cat-tabs{position:sticky;top:0;z-index:100;background:var(--surface);padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
+    .cat-tabs::-webkit-scrollbar{display:none}
+    .cat-tab{flex-shrink:0;padding:7px 15px;border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--text2);transition:all .2s;white-space:nowrap;font-family:inherit}
+    .cat-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+    /* Product grid */
+    .products-content{padding:18px 14px 32px}
+    .cat-section{margin-bottom:28px;scroll-margin-top:80px}
+    .cat-section-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:13px;display:flex;align-items:center;gap:7px;border-left:3px solid var(--green);padding-left:11px;border-radius:0 2px 2px 0}
+    .cat-section-title::after{content:'';flex:1;height:1px;background:var(--border);border-radius:2px}
+    .product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    @media(min-width:560px){.product-grid{grid-template-columns:repeat(4,1fr)}}
+    @media(min-width:768px){.product-grid{grid-template-columns:repeat(5,1fr)}}
+    @media(min-width:960px){.product-grid{grid-template-columns:repeat(6,1fr)}}
+    .product-card{border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 2px 8px var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;color:inherit;display:block;position:relative}
+    .product-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow)}
+    .product-card:active{transform:scale(.97)}
+    .product-img-wrap{width:100%;aspect-ratio:1;overflow:hidden;background:var(--bg2)}
+    .product-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+    .product-card:hover .product-img-wrap img{transform:scale(1.06)}
+    .product-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--bg2)}
+    .product-name-label{padding:7px 7px 8px;font-size:10.5px;font-weight:600;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pub-footer{text-align:center;padding:24px 20px 40px;color:var(--text3);font-size:11px}
+    .admin-access-link{color:var(--text3);text-decoration:none;border-bottom:1px dashed var(--border)}
+    .admin-access-link:hover{color:var(--primary)}
+
+    /* ===== ADMIN ===== */
+    #admin-layout{display:none;min-height:100vh;background:var(--bg)}
+    .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,var(--bg) 0%,var(--bg2) 100%)}
+    .login-card{width:100%;max-width:360px;background:var(--surface);border-radius:var(--radius-lg);padding:36px 28px;box-shadow:0 12px 48px var(--shadow)}
+    .login-logo{text-align:center;margin-bottom:28px}
+    .login-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,#4A3020,var(--primary));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+    .login-logo h2{font-size:20px;font-weight:800;color:var(--text)}
+    .login-logo p{font-size:13px;color:var(--text2);margin-top:3px}
+    .login-error{background:#fee2e2;color:#dc2626;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none}
+
+    /* Admin top bar */
+    .admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:200;gap:10px}
+    .admin-topbar-brand{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap}
+    .admin-nav{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;flex:1}
+    .admin-nav::-webkit-scrollbar{display:none}
+    .nav-btn{flex-shrink:0;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);transition:all .2s;font-family:inherit;white-space:nowrap}
+    .nav-btn.active{background:var(--primary);color:#fff}
+    .nav-btn:hover:not(.active){background:var(--surface2);color:var(--text)}
+    .topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
+    .topbar-btn{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;white-space:nowrap;transition:all .2s}
+    .topbar-btn:hover{background:var(--bg2)}
+
+    /* Admin content */
+    .admin-content{padding:20px 16px 60px;max-width:800px;margin:0 auto}
+    .admin-section{display:none}
+    .admin-section.active{display:block}
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+    .section-title{font-size:19px;font-weight:800;color:var(--text)}
+
+    /* Dashboard stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+    @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+    .stat-value{font-size:28px;font-weight:900;color:var(--primary);line-height:1}
+    .stat-label{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500}
+
+    /* Bar chart */
+    .chart-bars{display:flex;align-items:flex-end;gap:5px;height:90px;margin-top:12px}
+    .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .bar-fill{width:100%;background:linear-gradient(180deg,var(--primary) 0%,var(--accent) 100%);border-radius:4px 4px 0 0;min-height:4px;transition:height .4s ease}
+    .bar-lbl{font-size:9px;color:var(--text3);white-space:nowrap}
+
+    /* Click list */
+    .click-list{list-style:none}
+    .click-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+    .click-item:last-child{border:none}
+    .click-rank{font-size:11px;font-weight:800;color:var(--text3);width:18px}
+    .click-name{flex:1;font-size:13px;font-weight:500;color:var(--text);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .click-bar-bg{width:70px;background:var(--bg2);border-radius:50px;height:5px;flex-shrink:0}
+    .click-bar-fg{height:5px;background:var(--primary);border-radius:50px}
+    .click-count{font-size:13px;font-weight:800;color:var(--primary);min-width:22px;text-align:right}
+
+    /* Ref list */
+    .ref-list{list-style:none}
+    .ref-item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}
+    .ref-item:last-child{border:none}
+    .ref-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+    /* Profile edit */
+    .profile-edit-row{display:flex;gap:16px;align-items:flex-start}
+    .avatar-edit-col{display:flex;flex-direction:column;align-items:center;gap:7px}
+    .avatar-preview-img{width:80px;height:80px;border-radius:50%;background:var(--bg2);object-fit:cover;border:3px solid var(--border)}
+
+    /* Social item */
+    .social-edit-card{background:var(--bg);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;border:1.5px solid var(--border)}
+    .social-edit-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .social-edit-icon{width:34px;height:34px;border-radius:8px;background:var(--surface2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+    /* Category edit */
+    .cat-edit-block{background:var(--surface);border-radius:var(--radius);padding:18px;border:1px solid var(--border);margin-bottom:16px}
+    .cat-edit-header{display:flex;align-items:center;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+    .cat-name-edit{flex:1;min-width:120px;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-weight:700;background:var(--bg);color:var(--text);outline:none;font-family:inherit}
+    .cat-name-edit:focus{border-color:var(--primary)}
+    .cat-emoji-edit{width:48px;text-align:center;padding:8px 6px;border:1.5px solid var(--border);border-radius:8px;font-size:18px;background:var(--bg);color:var(--text);outline:none;font-family:inherit}
+    .cat-emoji-edit:focus{border-color:var(--primary)}
+
+    /* Product admin grid */
+    .product-admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px}
+    @media(min-width:440px){.product-admin-grid{grid-template-columns:repeat(4,1fr)}}
+    .product-admin-card{position:relative;border-radius:10px;overflow:hidden;background:var(--bg2);border:1.5px solid var(--border)}
+    .product-admin-img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+    .product-admin-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg2)}
+    .product-admin-label{padding:5px 6px 6px;font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+    .product-admin-actions{position:absolute;top:4px;right:4px;display:flex;gap:3px}
+    .add-product-btn{aspect-ratio:1;border:2px dashed var(--border);border-radius:10px;background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);font-size:20px;transition:all .2s;font-family:inherit}
+    .add-product-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2)}
+    .add-product-btn span.label{font-size:9px;font-weight:600}
+
+    /* Theme */
+    .theme-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media(min-width:400px){.theme-presets{grid-template-columns:repeat(6,1fr)}}
+    .theme-swatch{aspect-ratio:1;border-radius:10px;cursor:pointer;border:2.5px solid transparent;transition:all .2s;position:relative;overflow:hidden}
+    .theme-swatch.selected{border-color:var(--text)}
+    .theme-swatch-check{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0}
+    .theme-swatch.selected .theme-swatch-check{opacity:1}
+    .theme-name{font-size:10px;color:var(--text2);text-align:center;margin-top:4px;font-weight:500}
+
+    /* ===== IMAGE UPLOAD ZONE ===== */
+    .img-upload-zone{cursor:pointer;display:block;position:relative;border-radius:12px;overflow:hidden;background:var(--bg2);border:2px dashed var(--border);transition:all .2s;-webkit-user-select:none;user-select:none}
+    .img-upload-zone:hover{border-color:var(--green);background:var(--green-light)}
+    .img-upload-zone:active{transform:scale(.98)}
+    .upload-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:18px 10px;color:var(--text3);text-align:center}
+    .upload-placeholder .upload-icon{font-size:26px;line-height:1}
+    .upload-placeholder .upload-hint{font-size:10.5px;font-weight:600;color:var(--text3)}
+    .upload-placeholder .upload-sub{font-size:9.5px;color:var(--text3);opacity:.75}
+    .upload-preview-img{width:100%;height:100%;object-fit:cover;display:block}
+    .upload-overlay{position:absolute;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;color:#fff;font-size:11px;font-weight:700;gap:5px}
+    .img-upload-zone:hover .upload-overlay{opacity:1}
+    /* square zone for products */
+    .img-upload-sq{aspect-ratio:1}
+    /* wide zone for cover */
+    .img-upload-wide{height:110px}
+    /* circle zone for avatar */
+    .img-upload-circle{width:80px;height:80px;border-radius:50% !important;flex-shrink:0}
+
+    /* Divider */
+    .divider{height:1px;background:var(--border);margin:16px 0}
+
+    /* Empty state */
+    .empty-state{text-align:center;padding:36px 20px;color:var(--text2)}
+    .empty-state .emoji{font-size:40px;margin-bottom:10px}
+
+    /* Utility */
+    .flex{display:flex}.flex-center{display:flex;align-items:center}.flex-between{display:flex;align-items:center;justify-content:space-between}.gap-8{gap:8px}.gap-10{gap:10px}.gap-12{gap:12px}
+    .mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+    .mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}
+    .text-sm{font-size:13px}.text-xs{font-size:11px}.text-muted{color:var(--text2)}.text-center{text-align:center}
+    .fw-700{font-weight:700}
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast" class="">เข้าสู่ระบบสำเร็จ ✓</div>
+
+<!-- ═══════════════════════════════════════════
+     PUBLIC PAGE
+═══════════════════════════════════════════ -->
+<div id="public-page" style="display: none;">
+  <!-- Cover image -->
+  <div class="pub-cover" id="pub-cover"></div>
+
+  <!-- Profile -->
+  <div class="pub-profile" id="pub-profile">
+    <div class="pub-avatar-wrap">
+      <img src="" alt="avatar" class="pub-avatar" id="pub-avatar">
+    </div>
+    <div class="pub-name" id="pub-name"></div>
+    <div class="pub-bio" id="pub-bio"></div>
+    <div class="pub-subtitle" id="pub-subtitle"></div>
+  </div>
+
+  <!-- Social links -->
+  <div class="socials-row" id="pub-socials"></div>
+
+  <!-- Category tabs -->
+  <div class="cat-tabs" id="pub-tabs"></div>
+
+  <!-- Products -->
+  <div class="products-content" id="pub-products"></div>
+
+  <!-- Footer -->
+  <div class="pub-footer">
+    <a href="?admin=1" class="admin-access-link">⚙ จัดการ</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN LAYOUT
+═══════════════════════════════════════════ -->
+<div id="admin-layout" style="display: block;">
+
+  <!-- Login page -->
+  <div id="admin-login-page" class="login-page" style="display: none;">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logo-icon">🌿</div>
+        <h2>Admin Panel</h2>
+        <p>จัดการ Affiliate Page ของคุณ</p>
+      </div>
+      <div class="login-error" id="login-error" style="display: none;">รหัสผ่านไม่ถูกต้อง</div>
+      <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <input type="password" class="form-input" id="login-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn btn-primary btn-block mt-8" onclick="doLogin()">เข้าสู่ระบบ</button>
+      <div class="text-center mt-12">
+        <a href="javascript:showPublicPage()" class="text-sm text-muted" style="text-decoration:none;color:var(--text3)">← กลับหน้าเว็บ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin panel (post-login) -->
+  <div id="admin-panel" style="display: block;">
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <div class="admin-topbar-brand">🌿 ZenTum</div>
+      <nav class="admin-nav" id="admin-nav">
+        <button class="nav-btn" data-tab="dashboard" onclick="adminTab('dashboard')">📊 Dashboard</button>
+        <button class="nav-btn" data-tab="profile" onclick="adminTab('profile')">👤 โปรไฟล์</button>
+        <button class="nav-btn" data-tab="socials" onclick="adminTab('socials')">🔗 Social</button>
+        <button class="nav-btn" data-tab="categories" onclick="adminTab('categories')">📦 สินค้า</button>
+        <button class="nav-btn" data-tab="theme" onclick="adminTab('theme')">🎨 ธีม</button>
+        <button class="nav-btn active" data-tab="settings" onclick="adminTab('settings')">⚙️ ตั้งค่า</button>
+      </nav>
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="showPublicPage()">👁 ดูหน้าเว็บ</button>
+        <button class="topbar-btn" onclick="doLogout()">ออก</button>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div class="admin-content">
+      <div id="section-dashboard" class="admin-section">
+    <div class="section-header">
+      <h2 class="section-title">📊 Analytics</h2>
+      <button class="btn btn-secondary btn-sm" onclick="clearAnalytics()">ล้างข้อมูล</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">วิวทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">วิววันนี้</div></div>
+      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">คลิกสินค้า</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:14px;padding-top:4px">Desk</div><div class="stat-label">สินค้าฮิต</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📈 ยอดวิว 7 วันล่าสุด</div>
+      <div class="chart-bars">
+        <div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">พฤ.</div></div><div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">ศ.</div></div><div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">ส.</div></div><div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">อา.</div></div><div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">จ.</div></div><div class="bar-col"><div class="bar-fill" style="height:4px" title="0"></div><div class="bar-lbl">อ.</div></div><div class="bar-col"><div class="bar-fill" style="height:80px" title="7"></div><div class="bar-lbl">พ.</div></div>
+      </div>
+      
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏆 สินค้าที่คลิกมากที่สุด</div>
+      
+      <ul class="click-list">
+        <li class="click-item">
+          <span class="click-rank">#1</span>
+          <span class="click-name">Desk</span>
+          <div class="click-bar-bg"><div class="click-bar-fg" style="width:100%"></div></div>
+          <span class="click-count">3</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔀 แหล่งที่มา</div>
+      
+      <ul class="ref-list">
+        <li class="ref-item">
+          <div class="ref-dot" style="background:#7C6244"></div>
+          <span style="flex:1;font-size:13px">Direct</span>
+          <span style="font-size:13px;font-weight:800;color:var(--primary)">7</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Quick Actions</div>
+      <div class="flex gap-8" style="flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
+        <button class="btn btn-secondary btn-sm" onclick="adminTab('profile')">✏️ แก้ไขโปรไฟล์</button>
+        <button class="btn btn-secondary btn-sm" onclick="copyLink()">🔗 คัดลอกลิงค์</button>
+      </div>
+    </div>
+  </div>
+      <div id="section-profile" class="admin-section"></div>
+      <div id="section-socials" class="admin-section"></div>
+      <div id="section-categories" class="admin-section"></div>
+      <div id="section-theme" class="admin-section"></div>
+      <div id="section-settings" class="admin-section active">
+    <div class="section-header">
+      <h2 class="section-title">⚙️ ตั้งค่า</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ชื่อเว็บไซต์</div>
+      <div class="form-group">
+        <label>Title ในแท็บ Browser</label>
+        <input type="text" class="form-input" id="s-title" value="ZenTum">
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="saveTitle()">บันทึก</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔒 เปลี่ยนรหัสผ่าน Admin</div>
+      <div class="form-group">
+        <label>รหัสผ่านปัจจุบัน</label>
+        <input type="password" class="form-input" id="pw-old" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่านใหม่</label>
+        <input type="password" class="form-input" id="pw-new" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>ยืนยันรหัสผ่านใหม่</label>
+        <input type="password" class="form-input" id="pw-con" placeholder="••••••••">
+      </div>
+      <button class="btn btn-secondary" onclick="changePassword()">เปลี่ยนรหัสผ่าน</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💾 Backup &amp; Import</div>
+      <div class="flex gap-8" style="flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="exportData()">📤 Export JSON</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">📥 Import JSON</button>
+        <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="display:none">
+        <button class="btn btn-danger btn-sm" onclick="resetAll()">🗑️ Reset ทั้งหมด</button>
+      </div>
+      <div class="help-text mt-8">Export เพื่อสำรองข้อมูล / Import เพื่อกู้คืน</div>
+    </div>
+
+    <div class="card" style="border:2px solid var(--green-mid);background:var(--green-light)">
+      <div class="card-title" style="color:var(--green);font-size:16px">🌐 วิธีแชร์ให้คนอื่นดูได้</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px">
+        ไฟล์นี้ทำงานอยู่บน<strong>เครื่องของคุณเท่านั้น</strong> ต้องทำตามขั้นตอนนี้เพื่อแชร์ได้:
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">1</div>
+          <div style="font-size:13px;color:var(--text)"><strong>กดปุ่มด้านล่าง</strong> เพื่อดาวน์โหลดไฟล์ <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-size:11px">-share.html</code></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">2</div>
+          <div style="font-size:13px;color:var(--text)">เปิด <strong>netlify.com/drop</strong> แล้ว<strong>ลากไฟล์นั้นวางลงไป</strong> (ฟรี ไม่ต้องสมัคร)</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">3</div>
+          <div style="font-size:13px;color:var(--text)">ได้ URL ทันที เช่น <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-size:11px">xyz.netlify.app</code> → แชร์ได้เลย ดูได้ทั้งมือถือและคอม</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">↺</div>
+          <div style="font-size:13px;color:var(--text)">เพิ่มสินค้าใหม่ → กดปุ่มอีกครั้ง → อัปโหลดไฟล์ใหม่ที่ Netlify</div>
+        </div>
+      </div>
+      <button class="btn btn-block" style="background:var(--green);color:#fff;font-size:15px;padding:13px" onclick="exportShareablePage()">
+        🌐 สร้างไฟล์สำหรับแชร์
+      </button>
+      <div class="help-text mt-8" style="text-align:center">ดาวน์โหลดแล้วลากไปวางที่ netlify.com/drop</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📱 เข้า Admin บนมือถือ</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6">
+        หลังจาก deploy ที่ Netlify แล้ว เข้า Admin บนมือถือได้ที่:<br>
+        <code style="background:var(--bg2);padding:3px 7px;border-radius:5px;font-size:12px;margin-top:6px;display:inline-block">your-url.netlify.app?admin=1</code>
+      </p>
+      <div class="help-text mt-8">⚠️ Admin บนมือถือจะแก้ไขข้อมูลในหน้า Netlify เท่านั้น ต้อง Export ใหม่เพื่ออัปเดต</div>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────────
+// DATA MODEL
+// ─────────────────────────────────────────────
+const STORAGE_KEY = 'zentum_v2';
+const SESSION_KEY = 'zentum_admin';
+
+const DEFAULT_DATA = {
+  profile: {
+    name: 'ZenTum',
+    bio: 'Cozy Desk setup | Cozy Room',
+    subtitle: 'พิกัดของใช้ในห้องของเรา',
+    avatarUrl: '',
+    coverUrl: ''
+  },
+  socials: [
+    {id:'s1',platform:'instagram',label:'Instagram',url:'#'},
+    {id:'s2',platform:'tiktok',label:'TikTok',url:'#'},
+    {id:'s3',platform:'youtube',label:'YouTube',url:'#'},
+    {id:'s4',platform:'facebook',label:'Facebook',url:'#'},
+    {id:'s5',platform:'line',label:'LINE',url:'#'}
+  ],
+  categories: [
+    {id:'cat1',name:'Desksetup',emoji:'🖥️',visible:true,products:[
+      {id:'p1',name:'Desk',imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p2',name:'MSI 2k Monitor',imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p3',name:'Light Bar',imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p4',name:'Speaker',imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p5',name:'Logitech Mouse',imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p6',name:'Aula F75',imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat2',name:'Gadget, Charger',emoji:'⚡',visible:true,products:[]},
+    {id:'cat3',name:'Decor, Light & Aroma',emoji:'🕯️',visible:true,products:[]},
+    {id:'cat4',name:'เครื่องใช้ & Samsung',emoji:'📱',visible:true,products:[]}
+  ],
+  theme: {preset:'nature',primaryColor:'#7C6244',bgColor:'#F8F5F0'},
+  settings: {password:'zentum',siteTitle:'ZenTum'},
+  analytics: {views:[],clicks:[],referrers:[]}
+};
+
+const THEME_PRESETS = [
+  {id:'nature', name:'Nature',    primary:'#7C6244', accent:'#C4956A', bg:'#F7F5F0', bg2:'#EBE7DF', border:'#E6DDD0', text:'#2C2418', text2:'#7A6A58'},
+  {id:'forest', name:'Forest',    primary:'#2D6A4F', accent:'#52B788', bg:'#F0F7F4', bg2:'#D8EEE2', border:'#BCD8C8', text:'#0F2A1E', text2:'#3A6A52'},
+  {id:'ocean',  name:'Ocean',     primary:'#1A5F8A', accent:'#4EA8DE', bg:'#EFF5FB', bg2:'#D4E8F4', border:'#B8D4E8', text:'#0C2336', text2:'#2E6A94'},
+  {id:'rose',   name:'Rose',      primary:'#A63255', accent:'#D4637A', bg:'#FFF4F6', bg2:'#FFE4E9', border:'#F8C8D0', text:'#2C0A14', text2:'#8A3050'},
+  {id:'lavender',name:'Lavender', primary:'#6B4FA0', accent:'#9D7EC9', bg:'#F7F4FF', bg2:'#EDE8FF', border:'#D8D0F0', text:'#200A3C', text2:'#5A4A80'},
+  {id:'minimal', name:'Minimal',  primary:'#2C2C2C', accent:'#666',    bg:'#FAFAFA', bg2:'#F0F0F0', border:'#E0E0E0', text:'#1A1A1A', text2:'#666'}
+];
+
+// If page was exported with embedded data, use it (read-only public mode)
+const STATIC_MODE = typeof window.__STATIC_DATA__ !== 'undefined';
+
+function loadData() {
+  if (STATIC_MODE) return JSON.parse(JSON.stringify(window.__STATIC_DATA__));
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function saveData() {
+  if (STATIC_MODE) return; // exported page is read-only
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+let appData = loadData();
+let adminLoggedIn = sessionStorage.getItem(SESSION_KEY) === '1';
+let currentTab = 'dashboard';
+
+// ─────────────────────────────────────────────
+// THEME
+// ─────────────────────────────────────────────
+function applyTheme(presetId) {
+  const t = THEME_PRESETS.find(p => p.id === presetId) || THEME_PRESETS[0];
+  const r = document.documentElement.style;
+  r.setProperty('--primary', appData.theme.primaryColor || t.primary);
+  r.setProperty('--accent', t.accent);
+  r.setProperty('--bg', appData.theme.bgColor || t.bg);
+  r.setProperty('--bg2', t.bg2);
+  r.setProperty('--border', t.border);
+  r.setProperty('--text', t.text);
+  r.setProperty('--text2', t.text2);
+  r.setProperty('--text3', t.text2 + '88');
+  r.setProperty('--surface', '#ffffff');
+  r.setProperty('--surface2', t.bg2);
+  r.setProperty('--primary-light', t.accent);
+  r.setProperty('--shadow', t.primary + '22');
+}
+
+// ─────────────────────────────────────────────
+// ROUTER / INIT
+// ─────────────────────────────────────────────
+function init() {
+  applyTheme(appData.theme.preset || 'nature');
+  document.getElementById('page-title').textContent = appData.settings.siteTitle || 'ZenTum';
+  document.querySelector('.admin-topbar-brand').textContent = '🌿 ' + (appData.settings.siteTitle || 'ZenTum');
+  const p = new URLSearchParams(location.search);
+  if (p.get('admin') === '1' || location.hash === '#admin') {
+    showAdminLayout();
+  } else {
+    showPublicPage();
+    trackView();
+  }
+}
+
+function showPublicPage() {
+  document.getElementById('public-page').style.display = 'block';
+  document.getElementById('admin-layout').style.display = 'none';
+  renderPublicPage();
+  history.replaceState(null,'',location.pathname);
+}
+
+function showAdminLayout() {
+  document.getElementById('public-page').style.display = 'none';
+  document.getElementById('admin-layout').style.display = 'block';
+  if (adminLoggedIn) { showAdminPanel(); }
+  else { showLoginPage(); }
+}
+
+function showLoginPage() {
+  document.getElementById('admin-login-page').style.display = 'flex';
+  document.getElementById('admin-panel').style.display = 'none';
+}
+function showAdminPanel() {
+  document.getElementById('admin-login-page').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  renderAdminTab(currentTab);
+}
+
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  if (pw === appData.settings.password) {
+    adminLoggedIn = true;
+    sessionStorage.setItem(SESSION_KEY,'1');
+    document.getElementById('login-error').style.display = 'none';
+    showAdminPanel();
+    toast('เข้าสู่ระบบสำเร็จ ✓');
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('login-pw').style.borderColor = '#dc2626';
+    setTimeout(()=>{document.getElementById('login-pw').style.borderColor=''},2000);
+  }
+}
+function doLogout() {
+  adminLoggedIn = false;
+  sessionStorage.removeItem(SESSION_KEY);
+  showPublicPage();
+  toast('ออกจากระบบแล้ว');
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS
+// ─────────────────────────────────────────────
+function trackView() {
+  const today = new Date().toISOString().split('T')[0];
+  const views = appData.analytics.views;
+  const ex = views.find(v => v.date === today);
+  if (ex) ex.count++; else { views.push({date:today,count:1}); if(views.length>60) views.splice(0,1); }
+
+  const p = new URLSearchParams(location.search);
+  const ref = p.get('ref') || document.referrer || '';
+  const src = ref.includes('instagram') ? 'Instagram' :
+              ref.includes('tiktok') ? 'TikTok' :
+              ref.includes('facebook') ? 'Facebook' :
+              ref.includes('youtube') ? 'YouTube' :
+              ref.includes('twitter') || ref.includes('x.com') ? 'Twitter/X' :
+              p.get('ref') ? p.get('ref') : ref ? 'Other' : 'Direct';
+  const refs = appData.analytics.referrers || (appData.analytics.referrers = []);
+  const er = refs.find(r => r.source === src);
+  if (er) er.count++; else refs.push({source:src,count:1});
+  saveData();
+}
+
+function trackClick(id, name) {
+  if (!id) return;
+  const clicks = appData.analytics.clicks;
+  const ex = clicks.find(c => c.id === id);
+  if (ex) { ex.count++; ex.last = Date.now(); }
+  else clicks.push({id, name, count:1, last:Date.now()});
+  saveData();
+}
+
+// ─────────────────────────────────────────────
+// SOCIAL ICONS (SVG)
+// ─────────────────────────────────────────────
+function getSocialIcon(platform, size=16) {
+  const icons = {
+    instagram:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+    tiktok:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 100 12.68 6.34 6.34 0 006.33-6.34V8.69a8.16 8.16 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z"/></svg>`,
+    youtube:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.13-2.14C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.37.5A3 3 0 00.5 6.2 32 32 0 000 12a32 32 0 00.5 5.8 3 3 0 002.13 2.13c1.87.5 9.37.5 9.37.5s7.5 0 9.37-.5a3 3 0 002.13-2.13A32 32 0 0024 12a32 32 0 00-.5-5.8zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>`,
+    facebook:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.79V24C19.62 23.1 24 18.1 24 12.07z"/></svg>`,
+    line:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M24 10.3C24 4.62 18.62 0 12 0S0 4.62 0 10.3c0 5.1 4.5 9.37 10.58 10.18.41.09.97.27 1.11.62.13.32.08.81.04 1.13l-.18 1.09c-.06.32-.26 1.26 1.1.69 1.37-.58 7.36-4.34 10.04-7.43C23.29 14.62 24 12.54 24 10.3zm-14.73 3.56H6.75a.56.56 0 01-.56-.56V9.09a.56.56 0 111.12 0v3.65h2.35a.56.56 0 110 1.12zm2.23-.56a.56.56 0 11-1.12 0V9.09a.56.56 0 111.12 0v4.21zm5.12 0a.56.56 0 01-.56.56.55.55 0 01-.44-.21l-2.16-2.95v2.6a.56.56 0 11-1.12 0V9.09a.56.56 0 011-.34l2.16 2.95V9.09a.56.56 0 111.12 0v4.21z"/></svg>`,
+    twitter:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M18.24 3h3.55l-7.76 8.87L23 21h-7.15l-5.6-7.33L4.05 21H.5l8.3-9.49L1 3h7.33l5.06 6.69L18.24 3zm-1.25 16.17h1.97L7.1 5.03H4.99l12 14.14z"/></svg>`,
+    shopee:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>`,
+    lazada:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/></svg>`,
+    default:`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>`
+  };
+  return icons[platform] || icons.default;
+}
+
+// ─────────────────────────────────────────────
+// RENDER: PUBLIC PAGE
+// ─────────────────────────────────────────────
+function renderPublicPage() {
+  const {profile, socials, categories} = appData;
+
+  // Cover
+  const cover = document.getElementById('pub-cover');
+  if (profile.coverUrl) {
+    cover.style.backgroundImage = `url(${profile.coverUrl})`;
+    cover.style.backgroundSize = 'cover';
+    cover.style.backgroundPosition = 'center';
+  } else {
+    cover.style.backgroundImage = 'linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%)';
+  }
+
+  // Avatar
+  const av = document.getElementById('pub-avatar');
+  if (profile.avatarUrl) {
+    av.src = profile.avatarUrl;
+    av.onerror = () => { av.src = genAvatar(profile.name); };
+  } else {
+    av.src = genAvatar(profile.name);
+  }
+
+  // Profile text
+  document.getElementById('pub-name').textContent = profile.name || '';
+  document.getElementById('pub-bio').textContent = profile.bio || '';
+  document.getElementById('pub-subtitle').textContent = profile.subtitle || '';
+  document.getElementById('page-title').textContent = profile.name || appData.settings.siteTitle || 'ZenTum';
+
+  // Socials
+  const sc = document.getElementById('pub-socials');
+  sc.innerHTML = '';
+  socials.filter(s => s.url && s.url !== '#').forEach(s => {
+    const a = document.createElement('a');
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.className = 'social-pill';
+    a.innerHTML = `${getSocialIcon(s.platform,15)}<span>${s.label}</span>`;
+    a.addEventListener('click', () => trackClick('social_'+s.id, s.label));
+    sc.appendChild(a);
+  });
+  sc.style.display = sc.children.length ? 'flex' : 'none';
+
+  // Category tabs
+  const tabs = document.getElementById('pub-tabs');
+  const visibleCats = categories.filter(c => c.visible !== false && c.products && c.products.length > 0);
+  tabs.innerHTML = '';
+  if (visibleCats.length > 1) {
+    tabs.style.display = 'flex';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'cat-tab active';
+    allBtn.textContent = '✨ ทั้งหมด';
+    allBtn.dataset.id = 'all';
+    allBtn.onclick = () => scrollToCat('all', allBtn);
+    tabs.appendChild(allBtn);
+    visibleCats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-tab';
+      btn.textContent = (cat.emoji||'') + ' ' + cat.name;
+      btn.dataset.id = cat.id;
+      btn.onclick = () => scrollToCat(cat.id, btn);
+      tabs.appendChild(btn);
+    });
+  } else {
+    tabs.style.display = 'none';
+  }
+
+  // Products
+  const prod = document.getElementById('pub-products');
+  prod.innerHTML = '';
+  if (!visibleCats.length) {
+    prod.innerHTML = '<div class="empty-state"><div class="emoji">🛋️</div><p class="text-muted">ยังไม่มีสินค้า<br>เข้า Admin เพื่อเพิ่มสินค้าครับ</p></div>';
+    return;
+  }
+  visibleCats.forEach(cat => {
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.id = 'pub-cat-'+cat.id;
+    const h = document.createElement('h2');
+    h.className = 'cat-section-title';
+    h.textContent = (cat.emoji||'') + ' ' + cat.name;
+    sec.appendChild(h);
+    const grid = document.createElement('div');
+    grid.className = 'product-grid';
+    cat.products.forEach(p => {
+      const a = document.createElement('a');
+      a.href = (p.affiliateUrl && p.affiliateUrl !== '#') ? p.affiliateUrl : 'javascript:void(0)';
+      if (p.affiliateUrl && p.affiliateUrl !== '#') a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'product-card';
+      a.title = p.name;
+      a.addEventListener('click', () => trackClick(p.id, p.name));
+      a.innerHTML = `
+        <div class="product-img-wrap">
+          ${p.imageUrl
+            ? `<img src="${p.imageUrl}" alt="${esc(p.name)}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=product-img-placeholder>📦</div>'">`
+            : `<div class="product-img-placeholder">📦</div>`}
+        </div>
+        <div class="product-name-label">${esc(p.name)}</div>
+      `;
+      grid.appendChild(a);
+    });
+    sec.appendChild(grid);
+    prod.appendChild(sec);
+  });
+}
+
+function scrollToCat(id, btn) {
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (id === 'all') { window.scrollTo({top:0,behavior:'smooth'}); return; }
+  const el = document.getElementById('pub-cat-'+id);
+  if (el) {
+    const tabH = document.getElementById('pub-tabs').offsetHeight + 4;
+    const y = el.getBoundingClientRect().top + window.scrollY - tabH;
+    window.scrollTo({top:y,behavior:'smooth'});
+  }
+}
+
+function genAvatar(name) {
+  const letter = (name||'Z')[0].toUpperCase();
+  return `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 88 88'><rect width='88' height='88' rx='44' fill='%237C6244'/><text x='44' y='58' text-anchor='middle' font-size='40' font-family='sans-serif' fill='white'>${letter}</text></svg>`;
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─────────────────────────────────────────────
+// ADMIN TAB NAVIGATION
+// ─────────────────────────────────────────────
+function adminTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-'+tab).classList.add('active');
+  renderAdminTab(tab);
+}
+
+function renderAdminTab(tab) {
+  const fn = {dashboard:renderDashboard, profile:renderProfile, socials:renderSocials, categories:renderCategories, theme:renderTheme, settings:renderSettings};
+  if (fn[tab]) fn[tab]();
+}
+
+// ─────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────
+function renderDashboard() {
+  const el = document.getElementById('section-dashboard');
+  const {views, clicks, referrers=[]} = appData.analytics;
+  const total = views.reduce((s,v)=>s+v.count,0);
+  const todayStr = new Date().toISOString().split('T')[0];
+  const today = views.find(v=>v.date===todayStr)?.count || 0;
+  const totalC = clicks.reduce((s,c)=>s+c.count,0);
+  const top = [...clicks].sort((a,b)=>b.count-a.count)[0];
+
+  const last7 = [];
+  for (let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.toISOString().split('T')[0];
+    last7.push({lbl:d.toLocaleDateString('th-TH',{weekday:'short'}), count: views.find(v=>v.date===ds)?.count||0});
+  }
+  const maxV = Math.max(...last7.map(d=>d.count),1);
+
+  const topClicks = [...clicks].sort((a,b)=>b.count-a.count).slice(0,5);
+  const maxC = topClicks[0]?.count||1;
+  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#AAA'];
+  const topRefs = [...referrers].sort((a,b)=>b.count-a.count);
+
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">📊 Analytics</h2>
+      <button class="btn btn-secondary btn-sm" onclick="clearAnalytics()">ล้างข้อมูล</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">วิวทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-value">${today}</div><div class="stat-label">วิววันนี้</div></div>
+      <div class="stat-card"><div class="stat-value">${totalC}</div><div class="stat-label">คลิกสินค้า</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:14px;padding-top:4px">${top ? top.name.substring(0,10)+(top.name.length>10?'…':'') : '-'}</div><div class="stat-label">สินค้าฮิต</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📈 ยอดวิว 7 วันล่าสุด</div>
+      <div class="chart-bars">
+        ${last7.map(d=>`<div class="bar-col"><div class="bar-fill" style="height:${Math.max(4,Math.round(d.count/maxV*80))}px" title="${d.count}"></div><div class="bar-lbl">${d.lbl}</div></div>`).join('')}
+      </div>
+      ${last7.every(d=>d.count===0)?'<p class="text-sm text-muted text-center mt-8">ยังไม่มีข้อมูล</p>':''}
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏆 สินค้าที่คลิกมากที่สุด</div>
+      ${topClicks.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
+      <ul class="click-list">
+        ${topClicks.map((c,i)=>`<li class="click-item">
+          <span class="click-rank">#${i+1}</span>
+          <span class="click-name">${esc(c.name)}</span>
+          <div class="click-bar-bg"><div class="click-bar-fg" style="width:${Math.round(c.count/maxC*100)}%"></div></div>
+          <span class="click-count">${c.count}</span>
+        </li>`).join('')}
+      </ul>`}
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔀 แหล่งที่มา</div>
+      ${topRefs.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
+      <ul class="ref-list">
+        ${topRefs.map((r,i)=>`<li class="ref-item">
+          <div class="ref-dot" style="background:${refColors[i%refColors.length]}"></div>
+          <span style="flex:1;font-size:13px">${esc(r.source)}</span>
+          <span style="font-size:13px;font-weight:800;color:var(--primary)">${r.count}</span>
+        </li>`).join('')}
+      </ul>`}
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚡ Quick Actions</div>
+      <div class="flex gap-8" style="flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
+        <button class="btn btn-secondary btn-sm" onclick="adminTab('profile')">✏️ แก้ไขโปรไฟล์</button>
+        <button class="btn btn-secondary btn-sm" onclick="copyLink()">🔗 คัดลอกลิงค์</button>
+      </div>
+    </div>
+  `;
+}
+
+function clearAnalytics() {
+  if (!confirm('ล้างข้อมูล analytics ทั้งหมด?')) return;
+  appData.analytics = {views:[],clicks:[],referrers:[]};
+  saveData(); renderDashboard(); toast('ล้างข้อมูลแล้ว');
+}
+
+function copyLink() {
+  const url = location.origin + location.pathname;
+  navigator.clipboard?.writeText(url).then(()=>toast('คัดลอกลิงค์แล้ว ✓')).catch(()=>toast(url));
+}
+
+// ─────────────────────────────────────────────
+// PROFILE EDIT
+// ─────────────────────────────────────────────
+function renderProfile() {
+  const el = document.getElementById('section-profile');
+  const p = appData.profile;
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">👤 แก้ไขโปรไฟล์</h2>
+      <button class="btn btn-primary btn-sm" onclick="saveProfile()">💾 บันทึก</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ภาพปก (Cover)</div>
+      <input type="hidden" id="p-cover-data" value="${esc(p.coverUrl||'')}">
+      <input type="file" id="p-cover-file" accept="image/*" style="display:none" onchange="handleProfileImgUpload(this,'p-cover-data','cover-prev-img',1200,420,0.85)">
+      <label class="img-upload-zone img-upload-wide" onclick="document.getElementById('p-cover-file').click()" style="display:block">
+        ${p.coverUrl
+          ? `<img class="upload-preview-img" id="cover-prev-img" src="${esc(p.coverUrl)}" style="height:110px"><div class="upload-overlay">📷 เปลี่ยนรูปปก</div>`
+          : `<img class="upload-preview-img" id="cover-prev-img" src="" style="display:none"><div class="upload-placeholder" style="height:110px"><div class="upload-icon">🖼️</div><div class="upload-hint">แตะเพื่ออัปโหลดรูปปก</div><div class="upload-sub">รูปขนาดไหนก็ได้</div></div><div class="upload-overlay">📷 เปลี่ยนรูปปก</div>`
+        }
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ข้อมูลโปรไฟล์</div>
+      <div class="profile-edit-row">
+        <div class="avatar-edit-col">
+          <input type="hidden" id="p-avatar-data" value="${esc(p.avatarUrl||'')}">
+          <input type="file" id="p-avatar-file" accept="image/*" style="display:none" onchange="handleProfileImgUpload(this,'p-avatar-data','av-prev',300,300,0.88)">
+          <label class="img-upload-zone img-upload-circle" onclick="document.getElementById('p-avatar-file').click()">
+            ${p.avatarUrl
+              ? `<img class="upload-preview-img" id="av-prev" src="${esc(p.avatarUrl)}"><div class="upload-overlay" style="font-size:9px">📷</div>`
+              : `<img class="upload-preview-img" id="av-prev" src="${genAvatar(p.name)}" style="border-radius:50%"><div class="upload-overlay" style="font-size:9px">📷</div>`
+            }
+          </label>
+          <span class="text-xs text-muted">รูปโปรไฟล์</span>
+        </div>
+        <div style="flex:1;min-width:0">
+        </div>
+      </div>
+      <div class="form-group mt-12">
+        <label>ชื่อ</label>
+        <input type="text" class="form-input" id="p-name" value="${esc(p.name||'')}">
+      </div>
+      <div class="form-group">
+        <label>Bio / คำอธิบาย</label>
+        <input type="text" class="form-input" id="p-bio" value="${esc(p.bio||'')}">
+      </div>
+      <div class="form-group">
+        <label>ข้อความรอง</label>
+        <input type="text" class="form-input" id="p-subtitle" value="${esc(p.subtitle||'')}">
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-block" onclick="saveProfile()">💾 บันทึกโปรไฟล์</button>
+  `;
+
+}
+
+function saveProfile() {
+  appData.profile.coverUrl = document.getElementById('p-cover-data')?.value||'';
+  appData.profile.avatarUrl = document.getElementById('p-avatar-data')?.value||'';
+  appData.profile.name = document.getElementById('p-name').value.trim();
+  appData.profile.bio = document.getElementById('p-bio').value.trim();
+  appData.profile.subtitle = document.getElementById('p-subtitle').value.trim();
+  saveData(); toast('บันทึกโปรไฟล์แล้ว ✓');
+}
+
+// ─────────────────────────────────────────────
+// SOCIALS EDIT
+// ─────────────────────────────────────────────
+function renderSocials() {
+  const el = document.getElementById('section-socials');
+  const platforms = ['instagram','tiktok','youtube','facebook','line','twitter','shopee','lazada','other'];
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">🔗 Social Media</h2>
+      <button class="btn btn-primary btn-sm" onclick="addSocial()">+ เพิ่ม</button>
+    </div>
+    <div id="socials-list"></div>
+    <div class="flex gap-10 mt-8">
+      <button class="btn btn-secondary" style="flex:1" onclick="addSocial()">+ เพิ่มช่องทาง</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveSocials()">💾 บันทึก</button>
+    </div>
+  `;
+  renderSocialsList(platforms);
+}
+
+function renderSocialsList(platforms) {
+  if (!platforms) platforms = ['instagram','tiktok','youtube','facebook','line','twitter','shopee','lazada','other'];
+  const list = document.getElementById('socials-list');
+  list.innerHTML = appData.socials.map(s=>`
+    <div class="social-edit-card" id="se-${s.id}">
+      <div class="social-edit-top">
+        <div class="social-edit-icon" id="sei-${s.id}">${getSocialIcon(s.platform,18)}</div>
+        <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:9px">
+          <div>
+            <div class="form-label">Platform</div>
+            <select class="form-input" id="sp-${s.id}" onchange="updateSocialIcon('${s.id}')">
+              ${platforms.map(p=>`<option value="${p}" ${p===s.platform?'selected':''}>${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <div class="form-label">ชื่อที่แสดง</div>
+            <input type="text" class="form-input" id="sl-${s.id}" value="${esc(s.label)}">
+          </div>
+        </div>
+        <button class="icon-btn icon-btn-del" onclick="deleteSocial('${s.id}')" title="ลบ">✕</button>
+      </div>
+      <div>
+        <div class="form-label">URL ลิงค์</div>
+        <input type="url" class="form-input" id="su-${s.id}" value="${esc(s.url)}" placeholder="https://...">
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateSocialIcon(id) {
+  const plat = document.getElementById(`sp-${id}`).value;
+  const el = document.getElementById(`sei-${id}`);
+  if (el) el.innerHTML = getSocialIcon(plat,18);
+}
+
+function addSocial() {
+  const id = 's'+Date.now();
+  appData.socials.push({id,platform:'instagram',label:'New Social',url:''});
+  renderSocials();
+}
+function deleteSocial(id) {
+  appData.socials = appData.socials.filter(s=>s.id!==id);
+  renderSocials();
+}
+function saveSocials() {
+  appData.socials.forEach(s=>{
+    s.platform = document.getElementById(`sp-${s.id}`)?.value||s.platform;
+    s.label = document.getElementById(`sl-${s.id}`)?.value||s.label;
+    s.url = document.getElementById(`su-${s.id}`)?.value||s.url;
+  });
+  saveData(); toast('บันทึก Social Links แล้ว ✓');
+}
+
+// ─────────────────────────────────────────────
+// CATEGORIES + PRODUCTS EDIT
+// ─────────────────────────────────────────────
+function renderCategories() {
+  const el = document.getElementById('section-categories');
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">📦 จัดการสินค้า</h2>
+      <button class="btn btn-primary btn-sm" onclick="addCategory()">+ หมวดหมู่ใหม่</button>
+    </div>
+    <div id="cats-list">${appData.categories.map(c=>renderCatBlock(c)).join('')}</div>
+    <button class="btn btn-secondary btn-block mt-8" onclick="addCategory()">+ เพิ่มหมวดหมู่ใหม่</button>
+  `;
+}
+
+function renderCatBlock(cat) {
+  const prods = (cat.products||[]).map(p=>`
+    <div class="product-admin-card" id="pc-${p.id}">
+      ${p.imageUrl
+        ? `<img src="${esc(p.imageUrl)}" class="product-admin-img" onerror="this.className='';this.outerHTML='<div class=product-admin-placeholder>📦</div>'">`
+        : `<div class="product-admin-placeholder">📦</div>`}
+      <div class="product-admin-label">${esc(p.name)}</div>
+      <div class="product-admin-actions">
+        <button class="icon-btn icon-btn-edit" onclick="editProduct('${cat.id}','${p.id}')" title="แก้ไข">✏️</button>
+        <button class="icon-btn icon-btn-del" onclick="deleteProduct('${cat.id}','${p.id}')" title="ลบ">✕</button>
+      </div>
+    </div>
+  `).join('');
+  return `
+    <div class="cat-edit-block" id="cb-${cat.id}">
+      <div class="cat-edit-header">
+        <input type="text" class="cat-name-edit" id="cn-${cat.id}" value="${esc(cat.name)}">
+        <input type="text" class="cat-emoji-edit" id="ce-${cat.id}" value="${esc(cat.emoji||'📦')}">
+        <label class="switch" title="แสดง/ซ่อน">
+          <input type="checkbox" ${cat.visible!==false?'checked':''} onchange="toggleCat('${cat.id}',this.checked)">
+          <span class="switch-slider"></span>
+        </label>
+        <button class="btn btn-danger btn-sm" onclick="deleteCat('${cat.id}')">ลบ</button>
+      </div>
+      <div class="product-admin-grid">
+        ${prods}
+        <button class="add-product-btn" onclick="addProduct('${cat.id}')">
+          <span>＋</span><span class="label">เพิ่มสินค้า</span>
+        </button>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn btn-secondary btn-sm" onclick="saveCatName('${cat.id}')">💾 บันทึกชื่อ</button>
+        <button class="btn btn-primary btn-sm" onclick="addProduct('${cat.id}')">+ เพิ่มสินค้า</button>
+      </div>
+    </div>
+  `;
+}
+
+function addCategory() {
+  const id = 'cat'+Date.now();
+  appData.categories.push({id,name:'หมวดหมู่ใหม่',emoji:'📦',visible:true,products:[]});
+  saveData(); renderCategories(); toast('เพิ่มหมวดหมู่แล้ว');
+}
+function deleteCat(id) {
+  if (!confirm('ลบหมวดหมู่? สินค้าทั้งหมดจะหายไปด้วย')) return;
+  appData.categories = appData.categories.filter(c=>c.id!==id);
+  saveData(); renderCategories(); toast('ลบหมวดหมู่แล้ว');
+}
+function saveCatName(id) {
+  const cat = appData.categories.find(c=>c.id===id);
+  if (!cat) return;
+  cat.name = document.getElementById(`cn-${id}`)?.value||cat.name;
+  cat.emoji = document.getElementById(`ce-${id}`)?.value||cat.emoji;
+  saveData(); toast('บันทึกแล้ว ✓');
+}
+function toggleCat(id, visible) {
+  const cat = appData.categories.find(c=>c.id===id);
+  if (cat) { cat.visible = visible; saveData(); }
+}
+function deleteProduct(catId, pid) {
+  if (!confirm('ลบสินค้านี้?')) return;
+  const cat = appData.categories.find(c=>c.id===catId);
+  if (!cat) return;
+  cat.products = cat.products.filter(p=>p.id!==pid);
+  saveData(); renderCategories(); toast('ลบสินค้าแล้ว');
+}
+function addProduct(catId) { openProductModal(catId, null); }
+function editProduct(catId, pid) { openProductModal(catId, pid); }
+
+function openProductModal(catId, pid) {
+  const cat = appData.categories.find(c=>c.id===catId);
+  if (!cat) return;
+  const prod = pid ? cat.products.find(p=>p.id===pid) : null;
+  const isNew = !prod;
+  const ov = document.createElement('div');
+  ov.className = 'modal-overlay'; ov.id = 'prod-modal';
+  ov.addEventListener('click', e=>{ if(e.target===ov) closeModal(); });
+  const existingImg = prod?.imageUrl || '';
+  ov.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title">${isNew?'+ เพิ่มสินค้า':'✏️ แก้ไขสินค้า'}</h3>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="form-group">
+        <label>ชื่อสินค้า *</label>
+        <input type="text" class="form-input" id="m-name" value="${esc(prod?.name||'')}" placeholder="เช่น MSI Monitor 2K" autofocus>
+      </div>
+      <div class="form-group">
+        <label>รูปสินค้า</label>
+        <input type="hidden" id="m-img-data" value="${esc(existingImg)}">
+        <input type="file" id="m-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'m-img-data','m-img-zone',600,600,0.82)">
+        <label class="img-upload-zone img-upload-sq" id="m-img-zone" onclick="document.getElementById('m-img-file').click()" style="max-width:140px">
+          ${existingImg
+            ? `<img class="upload-preview-img" src="${esc(existingImg)}" id="m-img-preview"><div class="upload-overlay">📷 เปลี่ยนรูป</div>`
+            : `<div class="upload-placeholder"><div class="upload-icon">📷</div><div class="upload-hint">แตะเพื่ออัปโหลด</div><div class="upload-sub">ใส่รูปขนาดไหนก็ได้</div></div>`
+          }
+        </label>
+        <div class="help-text" style="margin-top:6px">รูปจะแสดงผลแบบ 1:1 อัตโนมัติ</div>
+      </div>
+      <div class="form-group">
+        <label>Affiliate Link</label>
+        <input type="url" class="form-input" id="m-link" value="${esc(prod?.affiliateUrl||'')}" placeholder="https://shopee.co.th/...">
+      </div>
+      <div class="form-group">
+        <label>คำอธิบาย (ไม่บังคับ)</label>
+        <textarea class="form-input" id="m-desc" rows="2" placeholder="รายละเอียดเพิ่มเติม">${esc(prod?.description||'')}</textarea>
+      </div>
+      <div class="flex gap-10 mt-8">
+        <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">ยกเลิก</button>
+        <button class="btn btn-primary" style="flex:1" onclick="saveProduct('${catId}','${pid||''}')">💾 ${isNew?'เพิ่มสินค้า':'บันทึก'}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(ov);
+  setTimeout(()=>document.getElementById('m-name')?.focus(),100);
+}
+
+// ─────────────────────────────────────────────
+// IMAGE COMPRESSION + UPLOAD
+// ─────────────────────────────────────────────
+function compressImage(file, maxW, maxH, quality, cb) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      const ratio = Math.min(maxW / w, maxH / h, 1);
+      w = Math.round(w * ratio); h = Math.round(h * ratio);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleImgUpload(input, dataId, zoneId, maxW, maxH, quality) {
+  const file = input.files[0]; if (!file) return;
+  const zone = document.getElementById(zoneId);
+  if (zone) zone.style.opacity = '0.5';
+  compressImage(file, maxW, maxH, quality, base64 => {
+    // Save to hidden input
+    const dataEl = document.getElementById(dataId);
+    if (dataEl) dataEl.value = base64;
+    // Update zone UI
+    if (zone) {
+      zone.style.opacity = '1';
+      zone.innerHTML = `<img class="upload-preview-img" src="${base64}"><div class="upload-overlay">📷 เปลี่ยนรูป</div>`;
+    }
+  });
+  input.value = '';
+}
+
+function handleProfileImgUpload(input, dataId, previewId, maxW, maxH, quality) {
+  const file = input.files[0]; if (!file) return;
+  compressImage(file, maxW, maxH, quality, base64 => {
+    const dataEl = document.getElementById(dataId);
+    if (dataEl) dataEl.value = base64;
+    const prev = document.getElementById(previewId);
+    if (prev) prev.src = base64;
+  });
+  input.value = '';
+}
+
+function saveProduct(catId, pid) {
+  const name = document.getElementById('m-name')?.value.trim();
+  if (!name) { toast('กรุณากรอกชื่อสินค้า'); return; }
+  const imageUrl = document.getElementById('m-img-data')?.value||'';
+  const affiliateUrl = document.getElementById('m-link')?.value.trim()||'#';
+  const description = document.getElementById('m-desc')?.value.trim()||'';
+  const cat = appData.categories.find(c=>c.id===catId);
+  if (!cat) return;
+  if (pid) {
+    const p = cat.products.find(p=>p.id===pid);
+    if (p) { p.name=name; p.imageUrl=imageUrl; p.affiliateUrl=affiliateUrl; p.description=description; }
+  } else {
+    cat.products.push({id:'p'+Date.now(),name,imageUrl,affiliateUrl,description});
+  }
+  saveData(); closeModal(); renderCategories();
+  toast(pid ? 'อัพเดทสินค้าแล้ว ✓' : 'เพิ่มสินค้าแล้ว ✓');
+}
+
+function closeModal() {
+  document.getElementById('prod-modal')?.remove();
+  document.getElementById('social-modal')?.remove();
+}
+
+// ─────────────────────────────────────────────
+// THEME EDIT
+// ─────────────────────────────────────────────
+function renderTheme() {
+  const el = document.getElementById('section-theme');
+  const {theme} = appData;
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">🎨 ธีมสี</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">เลือก Preset</div>
+      <div class="theme-presets">
+        ${THEME_PRESETS.map(t=>`
+          <div>
+            <div class="theme-swatch ${theme.preset===t.id?'selected':''}"
+                 style="background:linear-gradient(135deg,${t.primary} 0%,${t.accent} 100%)"
+                 onclick="selectTheme('${t.id}')" title="${t.name}">
+              <div class="theme-swatch-check">✓</div>
+            </div>
+            <div class="theme-name">${t.name}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">กำหนดสีเอง</div>
+      <div class="form-group">
+        <label>สีหลัก (Primary Color)</label>
+        <div class="flex gap-10 flex-center">
+          <input type="color" id="tc-primary" value="${theme.primaryColor||'#7C6244'}" oninput="syncColor('primary',this.value)" style="width:44px;height:36px;border:none;cursor:pointer;border-radius:8px;padding:2px;background:none">
+          <input type="text" class="form-input" id="tt-primary" value="${theme.primaryColor||'#7C6244'}" style="flex:1" oninput="syncColor('primary',this.value,true)">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>สีพื้นหลัง (Background)</label>
+        <div class="flex gap-10 flex-center">
+          <input type="color" id="tc-bg" value="${theme.bgColor||'#F8F5F0'}" oninput="syncColor('bg',this.value)" style="width:44px;height:36px;border:none;cursor:pointer;border-radius:8px;padding:2px;background:none">
+          <input type="text" class="form-input" id="tt-bg" value="${theme.bgColor||'#F8F5F0'}" style="flex:1" oninput="syncColor('bg',this.value,true)">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block mt-8" onclick="saveCustomTheme()">💾 ใช้สีนี้</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Preview</div>
+      <div style="background:var(--bg);border-radius:10px;padding:16px;border:1px solid var(--border)">
+        <div class="flex gap-10 flex-center mb-12">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">🌿</div>
+          <div>
+            <div style="font-weight:800;color:var(--text)">${esc(appData.profile.name||'ZenTum')}</div>
+            <div style="font-size:12px;color:var(--text2)">${esc(appData.profile.bio||'Cozy Desk setup')}</div>
+          </div>
+        </div>
+        <div class="flex gap-8">
+          <span style="background:var(--surface2);border:1.5px solid var(--border);padding:6px 12px;border-radius:50px;font-size:11px;color:var(--text);font-weight:600">Instagram</span>
+          <span style="background:var(--primary);padding:6px 12px;border-radius:50px;font-size:11px;color:#fff;font-weight:600">TikTok</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function syncColor(key, val, fromText=false) {
+  if (fromText) {
+    document.getElementById(`tc-${key}`).value = val;
+  } else {
+    document.getElementById(`tt-${key}`).value = val;
+  }
+  if (key==='primary') document.documentElement.style.setProperty('--primary', val);
+  if (key==='bg') document.documentElement.style.setProperty('--bg', val);
+}
+
+function selectTheme(id) {
+  const t = THEME_PRESETS.find(p=>p.id===id);
+  if (!t) return;
+  appData.theme.preset = id;
+  appData.theme.primaryColor = t.primary;
+  appData.theme.bgColor = t.bg;
+  applyTheme(id);
+  saveData(); renderTheme(); toast('เปลี่ยนธีมแล้ว ✓');
+}
+
+function saveCustomTheme() {
+  const primary = document.getElementById('tc-primary').value;
+  const bg = document.getElementById('tc-bg').value;
+  appData.theme.primaryColor = primary;
+  appData.theme.bgColor = bg;
+  appData.theme.preset = 'custom';
+  document.documentElement.style.setProperty('--primary', primary);
+  document.documentElement.style.setProperty('--bg', bg);
+  saveData(); toast('บันทึกธีมแล้ว ✓');
+}
+
+// ─────────────────────────────────────────────
+// SETTINGS
+// ─────────────────────────────────────────────
+function renderSettings() {
+  const el = document.getElementById('section-settings');
+  const s = appData.settings;
+  el.innerHTML = `
+    <div class="section-header">
+      <h2 class="section-title">⚙️ ตั้งค่า</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ชื่อเว็บไซต์</div>
+      <div class="form-group">
+        <label>Title ในแท็บ Browser</label>
+        <input type="text" class="form-input" id="s-title" value="${esc(s.siteTitle||'ZenTum')}">
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="saveTitle()">บันทึก</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔒 เปลี่ยนรหัสผ่าน Admin</div>
+      <div class="form-group">
+        <label>รหัสผ่านปัจจุบัน</label>
+        <input type="password" class="form-input" id="pw-old" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่านใหม่</label>
+        <input type="password" class="form-input" id="pw-new" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>ยืนยันรหัสผ่านใหม่</label>
+        <input type="password" class="form-input" id="pw-con" placeholder="••••••••">
+      </div>
+      <button class="btn btn-secondary" onclick="changePassword()">เปลี่ยนรหัสผ่าน</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💾 Backup & Import</div>
+      <div class="flex gap-8" style="flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="exportData()">📤 Export JSON</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">📥 Import JSON</button>
+        <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="display:none">
+        <button class="btn btn-danger btn-sm" onclick="resetAll()">🗑️ Reset ทั้งหมด</button>
+      </div>
+      <div class="help-text mt-8">Export เพื่อสำรองข้อมูล / Import เพื่อกู้คืน</div>
+    </div>
+
+    <div class="card" style="border:2px solid var(--green-mid);background:var(--green-light)">
+      <div class="card-title" style="color:var(--green);font-size:16px">🌐 วิธีแชร์ให้คนอื่นดูได้</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px">
+        ไฟล์นี้ทำงานอยู่บน<strong>เครื่องของคุณเท่านั้น</strong> ต้องทำตามขั้นตอนนี้เพื่อแชร์ได้:
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">1</div>
+          <div style="font-size:13px;color:var(--text)"><strong>กดปุ่มด้านล่าง</strong> เพื่อดาวน์โหลดไฟล์ <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-size:11px">-share.html</code></div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">2</div>
+          <div style="font-size:13px;color:var(--text)">เปิด <strong>netlify.com/drop</strong> แล้ว<strong>ลากไฟล์นั้นวางลงไป</strong> (ฟรี ไม่ต้องสมัคร)</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">3</div>
+          <div style="font-size:13px;color:var(--text)">ได้ URL ทันที เช่น <code style="background:var(--bg2);padding:1px 5px;border-radius:4px;font-size:11px">xyz.netlify.app</code> → แชร์ได้เลย ดูได้ทั้งมือถือและคอม</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">↺</div>
+          <div style="font-size:13px;color:var(--text)">เพิ่มสินค้าใหม่ → กดปุ่มอีกครั้ง → อัปโหลดไฟล์ใหม่ที่ Netlify</div>
+        </div>
+      </div>
+      <button class="btn btn-block" style="background:var(--green);color:#fff;font-size:15px;padding:13px" onclick="exportShareablePage()">
+        🌐 สร้างไฟล์สำหรับแชร์
+      </button>
+      <div class="help-text mt-8" style="text-align:center">ดาวน์โหลดแล้วลากไปวางที่ netlify.com/drop</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📱 เข้า Admin บนมือถือ</div>
+      <p style="font-size:13px;color:var(--text2);line-height:1.6">
+        หลังจาก deploy ที่ Netlify แล้ว เข้า Admin บนมือถือได้ที่:<br>
+        <code style="background:var(--bg2);padding:3px 7px;border-radius:5px;font-size:12px;margin-top:6px;display:inline-block">your-url.netlify.app?admin=1</code>
+      </p>
+      <div class="help-text mt-8">⚠️ Admin บนมือถือจะแก้ไขข้อมูลในหน้า Netlify เท่านั้น ต้อง Export ใหม่เพื่ออัปเดต</div>
+    </div>
+  `;
+}
+
+function saveTitle() {
+  appData.settings.siteTitle = document.getElementById('s-title').value.trim()||'ZenTum';
+  document.getElementById('page-title').textContent = appData.settings.siteTitle;
+  document.querySelector('.admin-topbar-brand').textContent = '🌿 '+appData.settings.siteTitle;
+  saveData(); toast('บันทึกแล้ว ✓');
+}
+
+function changePassword() {
+  const old = document.getElementById('pw-old').value;
+  const nw = document.getElementById('pw-new').value;
+  const con = document.getElementById('pw-con').value;
+  if (old !== appData.settings.password) { toast('รหัสผ่านปัจจุบันไม่ถูกต้อง'); return; }
+  if (nw.length < 4) { toast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+  if (nw !== con) { toast('รหัสผ่านใหม่ไม่ตรงกัน'); return; }
+  appData.settings.password = nw;
+  saveData(); toast('เปลี่ยนรหัสผ่านสำเร็จ ✓');
+  ['pw-old','pw-new','pw-con'].forEach(id => { document.getElementById(id).value=''; });
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(appData,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'zentum-backup-'+new Date().toISOString().split('T')[0]+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url); toast('Export สำเร็จ ✓');
+}
+
+// ─────────────────────────────────────────────
+// EXPORT SHAREABLE PAGE
+// ─────────────────────────────────────────────
+function exportShareablePage() {
+  // Get the current HTML source
+  const src = document.documentElement.outerHTML;
+  // Remove any existing __STATIC_DATA__ injection
+  const cleaned = src.replace(/<script[^>]*id="static-data-inject"[^>]*>[\s\S]*?<\/script>/g, '');
+  // Build the data injection tag - strip analytics from public view
+  const pubData = JSON.parse(JSON.stringify(appData));
+  pubData.analytics = {views:[], clicks:[], referrers:[]}; // don't expose analytics
+  const inject = '<scr'+'ipt id="static-data-inject">window.__STATIC_DATA__='+JSON.stringify(pubData)+';<'+'/script>';
+  // Insert right after <head>
+  const html = cleaned.replace(/(<head[^>]*>)/, '$1' + inject);
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (appData.settings.siteTitle||'zentum').toLowerCase().replace(/\s+/g,'-') + '-share.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('ดาวน์โหลดไฟล์แชร์แล้ว ✓');
+}
+
+function importData(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!confirm('Import ข้อมูล? ข้อมูลปัจจุบันจะถูกแทนที่')) return;
+      appData = imported;
+      saveData(); applyTheme(appData.theme?.preset||'nature');
+      renderAdminTab(currentTab); toast('Import สำเร็จ ✓');
+    } catch { toast('ไฟล์ไม่ถูกต้อง'); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+function resetAll() {
+  if (!confirm('Reset ทั้งหมด? ข้อมูลทั้งหมดจะหายไป')) return;
+  if (!confirm('ยืนยันอีกครั้ง — ไม่สามารถย้อนกลับได้')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  saveData(); applyTheme('nature');
+  renderAdminTab(currentTab); toast('Reset เรียบร้อย');
+}
+
+// ─────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  clearTimeout(toastTimer);
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+// ─────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────
+init();
+</script>
+
+
+</body></html>
