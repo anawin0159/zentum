@@ -59,6 +59,7 @@
     .icon-btn{width:28px;height:28px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;font-family:inherit}
     .icon-btn-edit{background:rgba(255,255,255,.92);color:var(--primary)}
     .icon-btn-del{background:rgba(220,38,38,.88);color:#fff}
+    .icon-btn-move{background:rgba(255,255,255,.92);color:var(--text2);font-size:15px}
 
     /* ===== FORM ===== */
     .form-group{margin-bottom:14px}
@@ -1016,6 +1017,8 @@ function renderCatBlock(cat) {
         : `<div class="product-admin-placeholder">📦</div>`}
       <div class="product-admin-label">${esc(p.name)}</div>
       <div class="product-admin-actions">
+        <button class="icon-btn icon-btn-move" onclick="moveProduct('${cat.id}','${p.id}',-1)" title="ขึ้น">↑</button>
+        <button class="icon-btn icon-btn-move" onclick="moveProduct('${cat.id}','${p.id}',1)" title="ลง">↓</button>
         <button class="icon-btn icon-btn-edit" onclick="editProduct('${cat.id}','${p.id}')" title="แก้ไข">✏️</button>
         <button class="icon-btn icon-btn-del" onclick="deleteProduct('${cat.id}','${p.id}')" title="ลบ">✕</button>
       </div>
@@ -1066,6 +1069,17 @@ function saveCatName(id) {
 function toggleCat(id, visible) {
   const cat = appData.categories.find(c=>c.id===id);
   if (cat) { cat.visible = visible; saveData(); }
+}
+function moveProduct(catId, pid, dir) {
+  const cat = appData.categories.find(c=>c.id===catId);
+  if (!cat) return;
+  const idx = cat.products.findIndex(p=>p.id===pid);
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= cat.products.length) return;
+  const tmp = cat.products[idx];
+  cat.products[idx] = cat.products[newIdx];
+  cat.products[newIdx] = tmp;
+  saveData(); renderCategories();
 }
 function deleteProduct(catId, pid) {
   if (!confirm('ลบสินค้านี้?')) return;
