@@ -131,16 +131,29 @@
     .login-error{background:#fee2e2;color:#dc2626;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none}
 
     /* Admin top bar */
-    .admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:200;gap:10px}
+    .admin-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;gap:8px}
     .admin-topbar-brand{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap}
-    .admin-nav{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;flex:1}
-    .admin-nav::-webkit-scrollbar{display:none}
-    .nav-btn{flex-shrink:0;padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text2);transition:all .2s;font-family:inherit;white-space:nowrap}
-    .nav-btn.active{background:var(--primary);color:#fff}
-    .nav-btn:hover:not(.active){background:var(--surface2);color:var(--text)}
+    .admin-nav{display:none}
     .topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
-    .topbar-btn{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;white-space:nowrap;transition:all .2s}
+    .topbar-btn{padding:7px 11px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;white-space:nowrap;transition:all .2s}
     .topbar-btn:hover{background:var(--bg2)}
+    /* Bottom nav for mobile */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:0}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;font-size:9px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--text3);transition:all .2s;font-family:inherit}
+    .nav-btn .nav-icon{font-size:18px;line-height:1}
+    .nav-btn.active{color:var(--primary)}
+    .nav-btn.active .nav-icon{transform:scale(1.15)}
+    .admin-content{padding-bottom:80px}
+    @media(min-width:600px){
+      .admin-nav{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;flex:1}
+      .admin-nav::-webkit-scrollbar{display:none}
+      .nav-btn{flex:unset;flex-direction:row;padding:7px 13px;font-size:12px;gap:0;color:var(--text2)}
+      .nav-btn .nav-icon{display:none}
+      .nav-btn.active{background:var(--primary);color:#fff}
+      .nav-btn:hover:not(.active){background:var(--surface2);color:var(--text)}
+      .bottom-nav{display:none}
+      .admin-content{padding-bottom:0}
+    }
     .topbar-share-btn{background:var(--primary)!important;color:#fff!important;border-color:var(--primary)!important}
     .topbar-share-btn:hover{background:var(--primary-light)!important}
 
@@ -343,6 +356,15 @@
       <div id="section-theme" class="admin-section"></div>
       <div id="section-settings" class="admin-section"></div>
     </div>
+    <!-- Bottom nav (mobile only) -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-tab="dashboard" onclick="adminTab('dashboard')"><span class="nav-icon">📊</span>Dashboard</button>
+      <button class="nav-btn" data-tab="profile" onclick="adminTab('profile')"><span class="nav-icon">👤</span>โปรไฟล์</button>
+      <button class="nav-btn" data-tab="socials" onclick="adminTab('socials')"><span class="nav-icon">🔗</span>Social</button>
+      <button class="nav-btn" data-tab="categories" onclick="adminTab('categories')"><span class="nav-icon">📦</span>สินค้า</button>
+      <button class="nav-btn" data-tab="theme" onclick="adminTab('theme')"><span class="nav-icon">🎨</span>ธีม</button>
+      <button class="nav-btn" data-tab="settings" onclick="adminTab('settings')"><span class="nav-icon">⚙️</span>ตั้งค่า</button>
+    </nav>
   </div>
 </div>
 
