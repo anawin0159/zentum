@@ -141,6 +141,8 @@
     .topbar-actions{display:flex;gap:6px;align-items:center;flex-shrink:0}
     .topbar-btn{padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;white-space:nowrap;transition:all .2s}
     .topbar-btn:hover{background:var(--bg2)}
+    .topbar-share-btn{background:var(--primary)!important;color:#fff!important;border-color:var(--primary)!important}
+    .topbar-share-btn:hover{background:var(--primary-light)!important}
 
     /* Admin content */
     .admin-content{padding:20px 16px 60px;max-width:800px;margin:0 auto}
@@ -282,7 +284,7 @@
   <div class="products-content" id="pub-products"></div>
 
   <!-- Footer -->
-  <div class="pub-footer">
+  <div class="pub-footer" style="display:none">
     <a href="?admin=1" class="admin-access-link">⚙ จัดการ</a>
   </div>
 </div>
@@ -327,6 +329,7 @@
       </nav>
       <div class="topbar-actions">
         <button class="topbar-btn" onclick="showPublicPage()">👁 ดูหน้าเว็บ</button>
+        <button class="topbar-btn topbar-share-btn" onclick="copyPublicLink()" id="share-btn">🔗 แชร์ลิงก์</button>
         <button class="topbar-btn" onclick="doLogout()">ออก</button>
       </div>
     </div>
@@ -352,6 +355,9 @@
 // ─────────────────────────────────────────────
 const STORAGE_KEY = 'zentum_v2';
 const SESSION_KEY = 'zentum_admin';
+const SUPABASE_URL = 'https://ajqywtocrfevicdrflyi.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ouYFH5QqeAZkB29hLmjL7g_huH2x3LH';
+const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
 
 const DEFAULT_DATA = {
   profile: {
@@ -407,8 +413,30 @@ function loadData() {
   return JSON.parse(JSON.stringify(DEFAULT_DATA));
 }
 function saveData() {
-  if (STATIC_MODE) return; // exported page is read-only
+  if (STATIC_MODE) return;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  saveToSupabase();
+}
+async function saveToSupabase() {
+  try {
+    await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1', {
+      method:'PATCH',
+      headers:{...SB_HEADERS,'Prefer':'return=minimal'},
+      body: JSON.stringify({data: appData, updated_at: new Date().toISOString()})
+    });
+  } catch(e) { console.warn('Supabase save failed', e); }
+}
+async function loadFromSupabase() {
+  try {
+    const res = await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1&select=data', {headers: SB_HEADERS});
+    const rows = await res.json();
+    if (rows && rows[0] && rows[0].data && Object.keys(rows[0].data).length > 0) {
+      appData = rows[0].data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      return true;
+    }
+  } catch(e) { console.warn('Supabase load failed', e); }
+  return false;
 }
 
 let appData = loadData();
@@ -438,7 +466,9 @@ function applyTheme(presetId) {
 // ─────────────────────────────────────────────
 // ROUTER / INIT
 // ─────────────────────────────────────────────
-function init() {
+async function init() {
+  // Load from Supabase first, fall back to localStorage
+  await loadFromSupabase();
   applyTheme(appData.theme.preset || 'nature');
   document.getElementById('page-title').textContent = appData.settings.siteTitle || 'ZenTum';
   document.querySelector('.admin-topbar-brand').textContent = '🌿 ' + (appData.settings.siteTitle || 'ZenTum');
@@ -494,6 +524,19 @@ function doLogout() {
   sessionStorage.removeItem(SESSION_KEY);
   showPublicPage();
   toast('ออกจากระบบแล้ว');
+}
+
+function copyPublicLink() {
+  const url = window.location.origin + window.location.pathname;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('share-btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ คัดลอกแล้ว!';
+    setTimeout(() => { btn.innerHTML = orig; }, 2000);
+    toast('คัดลอกลิงก์แล้ว ✓');
+  }).catch(() => {
+    prompt('คัดลอก URL นี้:', url);
+  });
 }
 
 // ─────────────────────────────────────────────
