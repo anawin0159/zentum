@@ -923,7 +923,7 @@ function renderDashboard() {
   const yesterdayStr = localDateStr(new Date(Date.now()-86400000));
 
   // ── Range Options ──
-  const rangeOpts = [{v:7,l:'7 วัน'},{v:14,l:'14 วัน'},{v:30,l:'30 วัน'},{v:0,l:'ทั้งหมด'}];
+  const rangeOpts = [{v:1,l:'วันนี้'},{v:7,l:'7 วัน'},{v:14,l:'14 วัน'},{v:30,l:'30 วัน'},{v:0,l:'ทั้งหมด'}];
   const n = dashRange > 0 ? dashRange : Math.max(views.length, 1);
 
   // ── Build chart days for selected range ──
@@ -988,7 +988,7 @@ function renderDashboard() {
     <!-- KPI Grid — all respond to range -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
       <div style="background:var(--surface);border-radius:14px;padding:16px 14px;border:1px solid var(--border)">
-        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👁 วิว ${dashRange===0?'ทั้งหมด':dashRange+'วัน'}</div>
+        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👁 วิว ${dashRange===1?'วันนี้':dashRange===0?'ทั้งหมด':dashRange+'วัน'}</div>
         <div style="font-size:30px;font-weight:900;color:var(--text);line-height:1">${rangeViews.toLocaleString()}</div>
         <div style="margin-top:7px;font-size:11px;font-weight:600;color:${growthPct!==null?(growthPct>=0?'#52B788':'#E8738A'):'var(--text3)'}">
           ${growthPct!==null?(growthPct>=0?'↑':'↓')+' '+Math.abs(growthPct)+'% vs ช่วงก่อน':'เฉลี่ย '+avgPerDay+' วิว/วัน'}
@@ -1011,14 +1011,14 @@ function renderDashboard() {
       </div>
     </div>
 
-    ${peakDay.count>1?`<div style="background:linear-gradient(135deg,rgba(124,98,68,.06),rgba(82,183,136,.06));border-radius:12px;padding:10px 14px;margin-bottom:12px;border:1px solid var(--border);font-size:12px;color:var(--text2)">🏅 วิวสูงสุดในช่วงนี้: <b style="color:var(--primary)">${peakDay.lbl||peakDay.ds}</b> — <b>${peakDay.count} วิว</b></div>`:''}
+    ${peakDay.count>1&&dashRange!==1?`<div style="background:linear-gradient(135deg,rgba(124,98,68,.06),rgba(82,183,136,.06));border-radius:12px;padding:10px 14px;margin-bottom:12px;border:1px solid var(--border);font-size:12px;color:var(--text2)">🏅 วิวสูงสุดในช่วงนี้: <b style="color:var(--primary)">${peakDay.lbl||peakDay.ds}</b> — <b>${peakDay.count} วิว</b></div>`:''}
 
     <!-- Traffic Chart -->
     <div class="card" style="margin-bottom:12px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div>
           <div style="font-size:14px;font-weight:700;color:var(--text)">📈 Traffic รายวัน</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px">${rangeViews} วิว ใน ${dashRange===0?'ทุกวัน':dashRange+' วันล่าสุด'}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${rangeViews} วิว ${dashRange===1?'วันนี้':dashRange===0?'ทั้งหมด':'ใน '+dashRange+' วันล่าสุด'}</div>
         </div>
         <div style="text-align:right">
           <div style="font-size:10px;color:var(--text3)">สูงสุด</div>
