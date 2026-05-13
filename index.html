@@ -82,9 +82,9 @@
 
     /* ===== PUBLIC PAGE ===== */
     #public-page{min-height:100vh;position:relative}
-    /* Leaf decorations */
+    /* Forest background */
     .leaf-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-    .leaf-bg svg{position:absolute;opacity:0.055;will-change:transform}
+    .leaf-bg svg{position:absolute;will-change:transform}
     #public-page > *:not(.leaf-bg){position:relative;z-index:1}
     .pub-cover{width:100%;height:200px;background:linear-gradient(145deg,#4A3020 0%,var(--primary) 55%,#9A7B48 100%);background-size:cover;background-position:center;position:relative}
     .pub-profile{padding:0 20px 16px;background:var(--surface)}
@@ -170,23 +170,34 @@
     .section-title{font-size:19px;font-weight:800;color:var(--text)}
 
     /* Dashboard stats */
-    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
     @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-    .stat-card{background:var(--surface);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:16px 14px;border:1px solid var(--border);position:relative;overflow:hidden}
+    .stat-card-icon{font-size:22px;margin-bottom:6px}
+    .stat-card-val{font-size:28px;font-weight:900;color:var(--text);line-height:1}
+    .stat-card-label{font-size:11px;color:var(--text3);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+    .stat-card-trend{font-size:11px;font-weight:700;margin-top:6px}
+    .trend-up{color:#22c55e}.trend-dn{color:#ef4444}.trend-neu{color:var(--text3)}
+    .stat-card-accent{position:absolute;right:-10px;bottom:-10px;width:60px;height:60px;border-radius:50%;opacity:.08}
     .stat-value{font-size:28px;font-weight:900;color:var(--primary);line-height:1}
     .stat-label{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500}
 
     /* Bar chart */
-    .chart-bars{display:flex;align-items:flex-end;gap:5px;height:90px;margin-top:12px}
-    .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-    .bar-fill{width:100%;background:linear-gradient(180deg,var(--primary) 0%,var(--accent) 100%);border-radius:4px 4px 0 0;min-height:4px;transition:height .4s ease}
+    .chart-wrap{position:relative;margin-top:8px}
+    .chart-grid{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+    .chart-grid-line{border-top:1px dashed var(--border);width:100%}
+    .chart-bars{display:flex;align-items:flex-end;gap:3px;height:120px;margin-top:4px;position:relative;z-index:1}
+    .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default}
+    .bar-fill{width:100%;background:linear-gradient(180deg,var(--primary) 0%,var(--accent) 100%);border-radius:4px 4px 0 0;min-height:3px;transition:height .5s cubic-bezier(.4,0,.2,1);position:relative}
+    .bar-fill:hover{filter:brightness(1.15)}
+    .bar-fill[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:2px 7px;border-radius:6px;font-size:10px;white-space:nowrap;z-index:10}
     .bar-lbl{font-size:9px;color:var(--text3);white-space:nowrap}
 
     /* Click list */
     .click-list{list-style:none}
-    .click-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+    .click-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
     .click-item:last-child{border:none}
-    .click-rank{font-size:11px;font-weight:800;color:var(--text3);width:18px}
+    .click-rank{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0}
     .click-name{flex:1;font-size:13px;font-weight:500;color:var(--text);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .click-bar-bg{width:70px;background:var(--bg2);border-radius:50px;height:5px;flex-shrink:0}
     .click-bar-fg{height:5px;background:var(--primary);border-radius:50px}
@@ -291,13 +302,107 @@
      PUBLIC PAGE
 ═══════════════════════════════════════════ -->
 <div id="public-page">
-  <!-- Leaf background decorations -->
+  <!-- Forest background -->
   <div class="leaf-bg" id="leaf-bg">
-    <svg id="lf1" style="top:-40px;left:-30px;width:260px" viewBox="0 0 200 300" fill="none"><path d="M20 280 C20 280 60 200 100 150 C140 100 180 60 160 20 C140 -20 80 40 60 100 C40 160 20 280 20 280Z" fill="#6B8A64"/><path d="M60 100 C80 80 120 60 160 20" stroke="#6B8A64" stroke-width="3" fill="none"/><path d="M40 160 C60 140 100 120 130 90" stroke="#6B8A64" stroke-width="2" fill="none" opacity=".6"/></svg>
-    <svg id="lf2" style="top:30%;right:-50px;width:220px" viewBox="0 0 200 300" fill="none"><path d="M180 280 C180 280 140 200 100 150 C60 100 20 60 40 20 C60 -20 120 40 140 100 C160 160 180 280 180 280Z" fill="#6B8A64"/><path d="M140 100 C120 80 80 60 40 20" stroke="#6B8A64" stroke-width="3" fill="none"/></svg>
-    <svg id="lf3" style="top:55%;left:-20px;width:180px" viewBox="0 0 160 200" fill="none"><path d="M10 190 C10 190 40 130 70 90 C100 50 140 20 120 5 C100 -10 60 30 50 80 C40 130 10 190 10 190Z" fill="#6B8A64"/><path d="M50 80 C65 60 100 40 120 5" stroke="#6B8A64" stroke-width="2" fill="none"/></svg>
-    <svg id="lf4" style="bottom:5%;right:-30px;width:200px" viewBox="0 0 200 250" fill="none"><path d="M190 240 C190 240 150 170 110 120 C70 70 20 40 30 10 C40 -20 100 20 130 70 C160 120 190 240 190 240Z" fill="#6B8A64"/><path d="M130 70 C110 50 70 30 30 10" stroke="#6B8A64" stroke-width="2.5" fill="none"/></svg>
-    <svg id="lf5" style="top:20%;left:40%;width:120px;opacity:.035" viewBox="0 0 100 140" fill="none"><ellipse cx="50" cy="70" rx="30" ry="55" fill="#6B8A64" transform="rotate(-20 50 70)"/></svg>
+
+    <!-- Layer 1: Far back — slow, faint (left side main branch) -->
+    <svg id="lf1" style="top:-60px;left:-60px;width:340px;opacity:0.07" viewBox="0 0 300 500" fill="none">
+      <!-- Main trunk -->
+      <path d="M30 500 C35 400 50 320 80 250 C110 180 130 120 100 60" stroke="#4A7A5A" stroke-width="14" stroke-linecap="round" fill="none"/>
+      <!-- Branch left -->
+      <path d="M80 250 C60 220 30 200 10 170" stroke="#4A7A5A" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <!-- Branch right -->
+      <path d="M95 200 C120 180 160 170 190 150" stroke="#4A7A5A" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <!-- Sub-branch -->
+      <path d="M100 60 C120 40 150 20 170 5" stroke="#4A7A5A" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M100 60 C80 40 60 20 40 10" stroke="#4A7A5A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <!-- Leaves on left branch -->
+      <ellipse cx="10" cy="165" rx="18" ry="10" fill="#5A8A64" opacity=".8" transform="rotate(-30 10 165)"/>
+      <ellipse cx="-5" cy="180" rx="14" ry="8" fill="#6B9A74" opacity=".7" transform="rotate(20 -5 180)"/>
+      <ellipse cx="25" cy="155" rx="16" ry="9" fill="#4A7A5A" opacity=".8" transform="rotate(-50 25 155)"/>
+      <!-- Leaves on right branch -->
+      <ellipse cx="185" cy="148" rx="20" ry="11" fill="#5A8A64" opacity=".8" transform="rotate(15 185 148)"/>
+      <ellipse cx="200" cy="140" rx="15" ry="8" fill="#6B9A74" opacity=".7" transform="rotate(-20 200 140)"/>
+      <ellipse cx="175" cy="162" rx="17" ry="9" fill="#4A7A5A" opacity=".75" transform="rotate(40 175 162)"/>
+      <!-- Top leaves -->
+      <ellipse cx="170" cy="5" rx="22" ry="12" fill="#5A8A64" opacity=".8" transform="rotate(25 170 5)"/>
+      <ellipse cx="150" cy="-5" rx="18" ry="10" fill="#6B9A74" opacity=".75" transform="rotate(-15 150 -5)"/>
+      <ellipse cx="40" cy="10" rx="20" ry="11" fill="#5A8A64" opacity=".8" transform="rotate(-35 40 10)"/>
+      <ellipse cx="25" cy="-2" rx="16" ry="9" fill="#6B9A74" opacity=".7" transform="rotate(45 25 -2)"/>
+    </svg>
+
+    <!-- Layer 2: Mid — right side branch -->
+    <svg id="lf2" style="top:-40px;right:-70px;width:320px;opacity:0.09" viewBox="0 0 300 480" fill="none">
+      <path d="M270 480 C260 380 240 300 210 230 C180 160 160 90 190 30" stroke="#4A7A5A" stroke-width="12" stroke-linecap="round" fill="none"/>
+      <path d="M210 230 C240 210 270 190 285 160" stroke="#4A7A5A" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M200 170 C170 150 140 140 120 120" stroke="#4A7A5A" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M190 30 C210 10 240 -5 260 -15" stroke="#4A7A5A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M190 30 C170 10 150 0 130 -10" stroke="#4A7A5A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <!-- Leaves -->
+      <ellipse cx="285" cy="157" rx="20" ry="11" fill="#5A8A64" opacity=".85" transform="rotate(20 285 157)"/>
+      <ellipse cx="298" cy="148" rx="16" ry="9" fill="#6B9A74" opacity=".75" transform="rotate(-15 298 148)"/>
+      <ellipse cx="272" cy="170" rx="18" ry="10" fill="#4A7A5A" opacity=".8" transform="rotate(50 272 170)"/>
+      <ellipse cx="120" cy="118" rx="22" ry="12" fill="#5A8A64" opacity=".8" transform="rotate(-25 120 118)"/>
+      <ellipse cx="105" cy="128" rx="17" ry="10" fill="#6B9A74" opacity=".7" transform="rotate(30 105 128)"/>
+      <ellipse cx="135" cy="108" rx="19" ry="10" fill="#4A7A5A" opacity=".75" transform="rotate(-45 135 108)"/>
+      <ellipse cx="260" cy="-15" rx="21" ry="12" fill="#5A8A64" opacity=".8" transform="rotate(30 260 -15)"/>
+      <ellipse cx="130" cy="-10" rx="18" ry="10" fill="#6B9A74" opacity=".75" transform="rotate(-20 130 -10)"/>
+    </svg>
+
+    <!-- Layer 3: Closer — bottom left cluster -->
+    <svg id="lf3" style="bottom:-20px;left:-40px;width:280px;opacity:0.11" viewBox="0 0 260 380" fill="none">
+      <path d="M20 380 C30 300 55 240 80 180 C105 120 110 70 90 20" stroke="#3D6E4E" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M80 180 C55 165 30 155 10 135" stroke="#3D6E4E" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M85 130 C110 115 140 100 160 80" stroke="#3D6E4E" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M90 20 C70 5 50 -5 30 -10" stroke="#3D6E4E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M90 20 C110 5 130 -5 150 -8" stroke="#3D6E4E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- Leaves -->
+      <ellipse cx="10" cy="132" rx="19" ry="11" fill="#52805E" opacity=".85" transform="rotate(-30 10 132)"/>
+      <ellipse cx="-5" cy="145" rx="15" ry="9" fill="#6B9A74" opacity=".75" transform="rotate(25 -5 145)"/>
+      <ellipse cx="160" cy="78" rx="21" ry="11" fill="#52805E" opacity=".85" transform="rotate(20 160 78)"/>
+      <ellipse cx="172" cy="68" rx="16" ry="9" fill="#6B9A74" opacity=".75" transform="rotate(-30 172 68)"/>
+      <ellipse cx="145" cy="90" rx="18" ry="10" fill="#3D6E4E" opacity=".8" transform="rotate(45 145 90)"/>
+      <ellipse cx="30" cy="-10" rx="20" ry="11" fill="#52805E" opacity=".8" transform="rotate(-20 30 -10)"/>
+      <ellipse cx="150" cy="-8" rx="19" ry="10" fill="#6B9A74" opacity=".75" transform="rotate(15 150 -8)"/>
+    </svg>
+
+    <!-- Layer 4: Close — bottom right -->
+    <svg id="lf4" style="bottom:-30px;right:-50px;width:260px;opacity:0.1" viewBox="0 0 250 360" fill="none">
+      <path d="M230 360 C220 280 200 210 170 150 C140 90 140 40 160 0" stroke="#3D6E4E" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <path d="M170 150 C195 130 215 115 230 95" stroke="#3D6E4E" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M165 100 C140 85 115 75 95 60" stroke="#3D6E4E" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <path d="M160 0 C175 -15 195 -20 210 -25" stroke="#3D6E4E" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="230" cy="92" rx="20" ry="11" fill="#52805E" opacity=".85" transform="rotate(25 230 92)"/>
+      <ellipse cx="242" cy="82" rx="15" ry="9" fill="#6B9A74" opacity=".75" transform="rotate(-20 242 82)"/>
+      <ellipse cx="95" cy="58" rx="22" ry="12" fill="#52805E" opacity=".8" transform="rotate(-30 95 58)"/>
+      <ellipse cx="80" cy="70" rx="17" ry="9" fill="#6B9A74" opacity=".7" transform="rotate(35 80 70)"/>
+      <ellipse cx="108" cy="48" rx="19" ry="10" fill="#3D6E4E" opacity=".75" transform="rotate(-50 108 48)"/>
+      <ellipse cx="210" cy="-25" rx="20" ry="11" fill="#52805E" opacity=".8" transform="rotate(20 210 -25)"/>
+    </svg>
+
+    <!-- Layer 5: Foreground detail — top right small branch (fastest parallax) -->
+    <svg id="lf5" style="top:-20px;right:15%;width:160px;opacity:0.08" viewBox="0 0 150 220" fill="none">
+      <path d="M130 0 C110 40 85 80 70 130 C55 180 60 210 50 220" stroke="#3D6E4E" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M70 130 C45 115 25 120 10 110" stroke="#3D6E4E" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M85 90 C105 75 125 65 140 50" stroke="#3D6E4E" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <ellipse cx="10" cy="108" rx="16" ry="9" fill="#52805E" opacity=".85" transform="rotate(-25 10 108)"/>
+      <ellipse cx="-2" cy="118" rx="13" ry="7" fill="#6B9A74" opacity=".7" transform="rotate(30 -2 118)"/>
+      <ellipse cx="140" cy="48" rx="17" ry="9" fill="#52805E" opacity=".85" transform="rotate(15 140 48)"/>
+      <ellipse cx="150" cy="38" rx="13" ry="7" fill="#6B9A74" opacity=".7" transform="rotate(-25 150 38)"/>
+    </svg>
+
+    <!-- Layer 6: Mid-left floating branch -->
+    <svg id="lf6" style="top:40%;left:-30px;width:200px;opacity:0.08" viewBox="0 0 180 200" fill="none">
+      <path d="M-10 100 C20 90 60 80 100 60 C130 45 160 25 175 5" stroke="#4A7A5A" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M60 80 C50 60 45 40 55 20" stroke="#4A7A5A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path d="M100 60 C95 40 100 20 95 5" stroke="#4A7A5A" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <ellipse cx="55" cy="18" rx="16" ry="9" fill="#5A8A64" opacity=".85" transform="rotate(-20 55 18)"/>
+      <ellipse cx="44" cy="10" rx="13" ry="7" fill="#6B9A74" opacity=".7" transform="rotate(30 44 10)"/>
+      <ellipse cx="95" cy="4" rx="15" ry="8" fill="#5A8A64" opacity=".8" transform="rotate(10 95 4)"/>
+      <ellipse cx="175" cy="4" rx="18" ry="10" fill="#5A8A64" opacity=".8" transform="rotate(25 175 4)"/>
+      <ellipse cx="162" cy="14" rx="14" ry="8" fill="#6B9A74" opacity=".7" transform="rotate(-30 162 14)"/>
+    </svg>
+
   </div>
   <!-- Cover image -->
   <div class="pub-cover" id="pub-cover"></div>
@@ -617,11 +722,15 @@ function detectSource() {
   return 'Direct';
 }
 
+function localDateStr(d) {
+  const dt = d || new Date();
+  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+}
 function trackView() {
-  const today = new Date().toISOString().split('T')[0];
+  const today = localDateStr();
   const views = appData.analytics.views;
   const ex = views.find(v => v.date === today);
-  if (ex) ex.count++; else { views.push({date:today,count:1}); if(views.length>60) views.splice(0,1); }
+  if (ex) ex.count++; else { views.push({date:today,count:1}); if(views.length>90) views.splice(0,1); }
   const src = detectSource();
   const refs = appData.analytics.referrers || (appData.analytics.referrers = []);
   const er = refs.find(r => r.source === src);
@@ -809,93 +918,160 @@ function renderAdminTab(tab) {
 let dashRange = 7;
 function renderDashboard() {
   const el = document.getElementById('section-dashboard');
-  const {views, clicks, referrers=[]} = appData.analytics;
-  const todayStr = new Date().toISOString().split('T')[0];
+  const {views=[], clicks=[], referrers=[]} = appData.analytics;
+  const todayStr = localDateStr();
+  const yesterdayStr = localDateStr(new Date(Date.now()-86400000));
+
   const total = views.reduce((s,v)=>s+v.count,0);
   const todayV = views.find(v=>v.date===todayStr)?.count || 0;
+  const yesterdayV = views.find(v=>v.date===yesterdayStr)?.count || 0;
   const totalC = clicks.reduce((s,c)=>s+c.count,0);
+  const ctr = total > 0 ? ((totalC/total)*100).toFixed(1) : '0.0';
 
-  // Date range
-  const rangeOpts = [{v:7,l:'7 วัน'},{v:30,l:'30 วัน'},{v:60,l:'60 วัน'},{v:0,l:'ทั้งหมด'}];
-  const days = [];
-  const n = dashRange || views.length || 7;
-  for (let i=n-1;i>=0;i--) {
-    const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.toISOString().split('T')[0];
-    const lbl = n <= 7 ? d.toLocaleDateString('th-TH',{weekday:'short'}) :
-                n <= 30 ? d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) :
-                (i % 7 === 0 ? d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : '');
-    days.push({ds, lbl, count: views.find(v=>v.date===ds)?.count||0});
+  // Trend
+  const trendDay = todayV - yesterdayV;
+  const trendIcon = trendDay > 0 ? '↑' : trendDay < 0 ? '↓' : '→';
+  const trendCls = trendDay > 0 ? 'trend-up' : trendDay < 0 ? 'trend-dn' : 'trend-neu';
+
+  // Date range chart
+  const rangeOpts = [{v:7,l:'7 วัน'},{v:14,l:'14 วัน'},{v:30,l:'30 วัน'},{v:0,l:'ทั้งหมด'}];
+  const n = dashRange > 0 ? dashRange : Math.max(views.length, 1);
+  const allDays = [];
+  if (dashRange === 0) {
+    views.forEach(v => allDays.push({ds:v.date, lbl:v.date.slice(5).replace('-','/'), count:v.count}));
+  } else {
+    for (let i=n-1;i>=0;i--) {
+      const d = new Date(); d.setDate(d.getDate()-i);
+      const ds = localDateStr(d);
+      const lbl = n<=7 ? d.toLocaleDateString('th-TH',{weekday:'short'}) :
+                  (i%Math.ceil(n/7)===0 ? d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : '');
+      allDays.push({ds, lbl, count: views.find(v=>v.date===ds)?.count||0});
+    }
   }
-  const allDays = dashRange === 0 ? views.map(v=>({ds:v.date,lbl:v.date.slice(5),count:v.count})) : days;
   const maxV = Math.max(...allDays.map(d=>d.count),1);
   const rangeViews = allDays.reduce((s,d)=>s+d.count,0);
 
   const topClicks = [...clicks].sort((a,b)=>b.count-a.count).slice(0,5);
   const maxC = topClicks[0]?.count||1;
-  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#F4A261','#AAA'];
+  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#F4A261','#94a3b8'];
   const topRefs = [...referrers].sort((a,b)=>b.count-a.count);
-  const top = topClicks[0];
+  const totalRefs = topRefs.reduce((s,r)=>s+r.count,0);
 
   el.innerHTML = `
-    <div class="section-header">
+    <div class="section-header" style="margin-bottom:16px">
       <h2 class="section-title">📊 Analytics</h2>
       <button class="btn btn-secondary btn-sm" onclick="clearAnalytics()">ล้างข้อมูล</button>
     </div>
 
+    <!-- KPI Cards -->
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">วิวทั้งหมด</div></div>
-      <div class="stat-card"><div class="stat-value">${todayV}</div><div class="stat-label">วิววันนี้</div></div>
-      <div class="stat-card"><div class="stat-value">${totalC}</div><div class="stat-label">คลิกสินค้า</div></div>
-      <div class="stat-card"><div class="stat-value" style="font-size:13px;padding-top:4px">${top ? top.name.substring(0,12)+(top.name.length>12?'…':'') : '-'}</div><div class="stat-label">สินค้าฮิต</div></div>
+      <div class="stat-card">
+        <div class="stat-card-icon">👁</div>
+        <div class="stat-card-val">${total.toLocaleString()}</div>
+        <div class="stat-card-label">วิวทั้งหมด</div>
+        <div class="stat-card-accent" style="background:var(--primary)"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">📅</div>
+        <div class="stat-card-val">${todayV}</div>
+        <div class="stat-card-label">วิววันนี้</div>
+        <div class="stat-card-trend ${trendCls}">${trendIcon} ${Math.abs(trendDay)} จากเมื่อวาน</div>
+        <div class="stat-card-accent" style="background:#52B788"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🖱️</div>
+        <div class="stat-card-val">${totalC.toLocaleString()}</div>
+        <div class="stat-card-label">คลิกสินค้า</div>
+        <div class="stat-card-accent" style="background:#4EA8DE"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">⚡</div>
+        <div class="stat-card-val">${ctr}%</div>
+        <div class="stat-card-label">CTR (คลิก/วิว)</div>
+        <div class="stat-card-accent" style="background:#E8738A"></div>
+      </div>
     </div>
 
+    <!-- Traffic Chart -->
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <div class="card-title" style="margin:0">📈 ยอดวิว <span style="color:var(--primary)">${rangeViews}</span> ครั้ง</div>
-        <div style="display:flex;gap:4px">
-          ${rangeOpts.map(r=>`<button onclick="dashRange=${r.v};renderDashboard()" style="padding:4px 10px;border-radius:20px;border:1.5px solid ${dashRange===r.v?'var(--primary)':'var(--border)'};background:${dashRange===r.v?'var(--primary)':'transparent'};color:${dashRange===r.v?'#fff':'var(--text2)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">${r.l}</button>`).join('')}
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">📈 Traffic</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">${rangeViews.toLocaleString()} วิว ใน ${dashRange||'ทั้งหมด'} ${dashRange?'วัน':''}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${rangeOpts.map(r=>`<button onclick="dashRange=${r.v};renderDashboard()" style="padding:5px 11px;border-radius:20px;border:1.5px solid ${dashRange===r.v?'var(--primary)':'var(--border)'};background:${dashRange===r.v?'var(--primary)':'transparent'};color:${dashRange===r.v?'#fff':'var(--text2)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${r.l}</button>`).join('')}
         </div>
       </div>
-      <div class="chart-bars" style="align-items:flex-end;min-height:90px">
-        ${allDays.map(d=>`<div class="bar-col" style="min-width:${allDays.length>30?'6px':'auto'}"><div class="bar-fill" style="height:${Math.max(3,Math.round(d.count/maxV*80))}px" title="${d.ds}: ${d.count} วิว"></div>${d.lbl?`<div class="bar-lbl">${d.lbl}</div>`:''}</div>`).join('')}
+      <div class="chart-wrap">
+        <div class="chart-grid">${[0,1,2,3].map(()=>'<div class="chart-grid-line"></div>').join('')}</div>
+        <div class="chart-bars">
+          ${allDays.map(d=>{
+            const h = Math.max(3, Math.round(d.count/maxV*110));
+            const isToday = d.ds === todayStr;
+            return `<div class="bar-col"><div class="bar-fill" style="height:${h}px;${isToday?'background:linear-gradient(180deg,#52B788,#6B8A64)':''}" title="${d.ds}: ${d.count} วิว"></div>${d.lbl?`<div class="bar-lbl" style="${isToday?'color:var(--green);font-weight:700':''}">${d.lbl}</div>`:''}</div>`;
+          }).join('')}
+        </div>
       </div>
-      ${allDays.every(d=>d.count===0)?'<p class="text-sm text-muted text-center mt-8">ยังไม่มีข้อมูล</p>':''}
+      ${allDays.every(d=>d.count===0)?'<p style="font-size:12px;color:var(--text3);text-align:center;padding:16px 0">ยังไม่มีข้อมูล — รอให้คนเข้าเว็บก่อนครับ</p>':''}
     </div>
 
+    <!-- Top Products -->
     <div class="card">
-      <div class="card-title">🏆 Top 5 สินค้ายอดคลิก</div>
-      ${topClicks.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
-      <ul class="click-list">
-        ${topClicks.map((c,i)=>`<li class="click-item">
-          <span class="click-rank" style="background:${i===0?'var(--primary)':i===1?'#A0845C':i===2?'#C4956A':'var(--bg2)'};color:${i<3?'#fff':'var(--text2)'}">#${i+1}</span>
-          <span class="click-name">${esc(c.name)}</span>
-          <div class="click-bar-bg"><div class="click-bar-fg" style="width:${Math.round(c.count/maxC*100)}%"></div></div>
-          <span class="click-count">${c.count} คลิก</span>
-        </li>`).join('')}
-      </ul>`}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">🏆 Top 5 สินค้ายอดคลิก</div>
+        <div style="font-size:11px;color:var(--text3)">${totalC} คลิกรวม</div>
+      </div>
+      ${topClicks.length===0
+        ? '<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูลคลิก</p>'
+        : `<ul class="click-list">${topClicks.map((c,i)=>{
+          const pct = Math.round(c.count/maxC*100);
+          const medals = ['🥇','🥈','🥉'];
+          const bg = i===0?'var(--primary)':i===1?'#A0845C':i===2?'#C4956A':'var(--bg2)';
+          const fg = i<3?'#fff':'var(--text2)';
+          return `<li class="click-item">
+            <span class="click-rank" style="background:${bg};color:${fg}">${medals[i]||'#'+String(i+1)}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.name)}</div>
+              <div style="margin-top:5px;background:var(--bg2);border-radius:50px;height:5px"><div style="width:${pct}%;height:100%;background:${bg};border-radius:50px;transition:width .5s"></div></div>
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-size:15px;font-weight:900;color:var(--primary)">${c.count}</div>
+              <div style="font-size:10px;color:var(--text3)">${pct}%</div>
+            </div>
+          </li>`;}).join('')}</ul>`}
     </div>
 
+    <!-- Traffic Sources -->
     <div class="card">
-      <div class="card-title">🔀 แหล่งที่มา</div>
-      <p style="font-size:11px;color:var(--text3);margin-bottom:10px">💡 ใส่ <b>?ref=tiktok</b> ต่อท้าย URL เวลาแชร์ใน TikTok เพื่อให้ระบบรู้จัก</p>
-      ${topRefs.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
-      <ul class="ref-list">
-        ${topRefs.map((r,i)=>`<li class="ref-item">
-          <div class="ref-dot" style="background:${refColors[i%refColors.length]}"></div>
-          <span style="flex:1;font-size:13px">${esc(r.source)}</span>
-          <div style="flex:2;margin:0 8px;background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div style="height:100%;width:${Math.round(r.count/topRefs[0].count*100)}%;background:${refColors[i%refColors.length]};border-radius:4px"></div></div>
-          <span style="font-size:13px;font-weight:800;color:var(--primary)">${r.count}</span>
-        </li>`).join('')}
-      </ul>`}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:14px;font-weight:700;color:var(--text)">🔀 แหล่งที่มา</div>
+        <div style="font-size:11px;color:var(--text3)">${totalRefs} วิวรวม</div>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-bottom:12px;padding:8px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green)">💡 เพิ่ม <b>?ref=tiktok</b> ต่อท้าย URL ที่แชร์ใน TikTok เช่น <code style="font-size:10px">...zentum/?ref=tiktok</code></p>
+      ${topRefs.length===0
+        ? '<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูล</p>'
+        : `<ul class="ref-list">${topRefs.map((r,i)=>{
+          const pct = totalRefs > 0 ? Math.round(r.count/totalRefs*100) : 0;
+          return `<li class="ref-item">
+            <div class="ref-dot" style="background:${refColors[i%refColors.length]}"></div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <span style="font-size:13px;font-weight:600">${esc(r.source)}</span>
+                <span style="font-size:13px;font-weight:800;color:var(--primary)">${r.count} <span style="font-size:10px;color:var(--text3);font-weight:500">(${pct}%)</span></span>
+              </div>
+              <div style="background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${refColors[i%refColors.length]};border-radius:4px;transition:width .5s"></div></div>
+            </div>
+          </li>`;}).join('')}</ul>`}
     </div>
 
-    <div class="card">
-      <div class="card-title">⚡ Quick Actions</div>
-      <div class="flex gap-8" style="flex-wrap:wrap">
-        <button class="btn btn-secondary btn-sm" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
-        <button class="btn btn-secondary btn-sm" onclick="adminTab('profile')">✏️ แก้ไขโปรไฟล์</button>
-        <button class="btn btn-secondary btn-sm" onclick="copyPublicLink()">🔗 คัดลอกลิงค์</button>
+    <!-- Quick Actions -->
+    <div class="card" style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border:none">
+      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:12px">⚡ Quick Actions</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3)" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3)" onclick="adminTab('profile')">✏️ แก้โปรไฟล์</button>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3)" onclick="copyPublicLink()">🔗 แชร์ลิงก์</button>
       </div>
     </div>
   `;
@@ -1570,8 +1746,12 @@ function toast(msg) {
 // Leaf parallax
 (function(){
   const leaves = [
-    {id:'lf1', speed:0.06}, {id:'lf2', speed:0.04},
-    {id:'lf3', speed:0.08}, {id:'lf4', speed:0.05}, {id:'lf5', speed:0.03}
+    {id:'lf1', speed:0.04},  // far back left trunk — slowest
+    {id:'lf2', speed:0.03},  // far back right — very slow
+    {id:'lf6', speed:0.05},  // mid floating horizontal branch
+    {id:'lf4', speed:0.07},  // closer right cluster
+    {id:'lf3', speed:0.09},  // closer left cluster — faster
+    {id:'lf5', speed:0.12},  // foreground detail — fastest
   ];
   let ticking = false;
   window.addEventListener('scroll', () => {
