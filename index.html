@@ -81,7 +81,11 @@
     .card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px}
 
     /* ===== PUBLIC PAGE ===== */
-    #public-page{min-height:100vh}
+    #public-page{min-height:100vh;position:relative}
+    /* Leaf decorations */
+    .leaf-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .leaf-bg svg{position:absolute;opacity:0.055;will-change:transform}
+    #public-page > *:not(.leaf-bg){position:relative;z-index:1}
     .pub-cover{width:100%;height:200px;background:linear-gradient(145deg,#4A3020 0%,var(--primary) 55%,#9A7B48 100%);background-size:cover;background-position:center;position:relative}
     .pub-profile{padding:0 20px 16px;background:var(--surface)}
     .pub-avatar-wrap{margin-top:-52px;margin-bottom:10px;display:flex;align-items:flex-end;justify-content:space-between;position:relative;z-index:10}
@@ -223,6 +227,18 @@
     .add-product-btn{aspect-ratio:1;border:2px dashed var(--border);border-radius:10px;background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);font-size:20px;transition:all .2s;font-family:inherit}
     .add-product-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--surface2)}
     .add-product-btn span.label{font-size:9px;font-weight:600}
+    /* Reorder list mode */
+    .reorder-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+    .reorder-item{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 10px}
+    .reorder-thumb{width:40px;height:40px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;overflow:hidden}
+    .reorder-thumb img{width:100%;height:100%;object-fit:cover}
+    .reorder-name{flex:1;font-size:13px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .reorder-btns{display:flex;gap:4px;flex-shrink:0}
+    .reorder-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg2);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text2);font-family:inherit;transition:all .2s}
+    .reorder-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .reorder-btn:disabled{opacity:.3;cursor:not-allowed}
+    .reorder-btn.edit{background:var(--surface2);color:var(--primary)}
+    .reorder-btn.del{background:#fee2e2;color:#dc2626;border-color:#fecaca}
 
     /* Theme */
     .theme-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -275,6 +291,14 @@
      PUBLIC PAGE
 ═══════════════════════════════════════════ -->
 <div id="public-page">
+  <!-- Leaf background decorations -->
+  <div class="leaf-bg" id="leaf-bg">
+    <svg id="lf1" style="top:-40px;left:-30px;width:260px" viewBox="0 0 200 300" fill="none"><path d="M20 280 C20 280 60 200 100 150 C140 100 180 60 160 20 C140 -20 80 40 60 100 C40 160 20 280 20 280Z" fill="#6B8A64"/><path d="M60 100 C80 80 120 60 160 20" stroke="#6B8A64" stroke-width="3" fill="none"/><path d="M40 160 C60 140 100 120 130 90" stroke="#6B8A64" stroke-width="2" fill="none" opacity=".6"/></svg>
+    <svg id="lf2" style="top:30%;right:-50px;width:220px" viewBox="0 0 200 300" fill="none"><path d="M180 280 C180 280 140 200 100 150 C60 100 20 60 40 20 C60 -20 120 40 140 100 C160 160 180 280 180 280Z" fill="#6B8A64"/><path d="M140 100 C120 80 80 60 40 20" stroke="#6B8A64" stroke-width="3" fill="none"/></svg>
+    <svg id="lf3" style="top:55%;left:-20px;width:180px" viewBox="0 0 160 200" fill="none"><path d="M10 190 C10 190 40 130 70 90 C100 50 140 20 120 5 C100 -10 60 30 50 80 C40 130 10 190 10 190Z" fill="#6B8A64"/><path d="M50 80 C65 60 100 40 120 5" stroke="#6B8A64" stroke-width="2" fill="none"/></svg>
+    <svg id="lf4" style="bottom:5%;right:-30px;width:200px" viewBox="0 0 200 250" fill="none"><path d="M190 240 C190 240 150 170 110 120 C70 70 20 40 30 10 C40 -20 100 20 130 70 C160 120 190 240 190 240Z" fill="#6B8A64"/><path d="M130 70 C110 50 70 30 30 10" stroke="#6B8A64" stroke-width="2.5" fill="none"/></svg>
+    <svg id="lf5" style="top:20%;left:40%;width:120px;opacity:.035" viewBox="0 0 100 140" fill="none"><ellipse cx="50" cy="70" rx="30" ry="55" fill="#6B8A64" transform="rotate(-20 50 70)"/></svg>
+  </div>
   <!-- Cover image -->
   <div class="pub-cover" id="pub-cover"></div>
 
@@ -565,20 +589,40 @@ function copyPublicLink() {
 // ─────────────────────────────────────────────
 // ANALYTICS
 // ─────────────────────────────────────────────
+function detectSource() {
+  const p = new URLSearchParams(location.search);
+  const refParam = (p.get('ref') || p.get('utm_source') || '').toLowerCase();
+  if (refParam) {
+    if (refParam.includes('tiktok')) return 'TikTok';
+    if (refParam.includes('instagram') || refParam === 'ig') return 'Instagram';
+    if (refParam.includes('facebook') || refParam === 'fb') return 'Facebook';
+    if (refParam.includes('youtube') || refParam === 'yt') return 'YouTube';
+    if (refParam.includes('twitter') || refParam === 'x') return 'Twitter/X';
+    if (refParam.includes('line')) return 'LINE';
+    return refParam.charAt(0).toUpperCase() + refParam.slice(1);
+  }
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes('tiktok') || ua.includes('bytedancewebview') || ua.includes('musical_ly')) return 'TikTok';
+  if (ua.includes('instagram')) return 'Instagram';
+  if (ua.includes('fban') || ua.includes('fbav') || ua.includes('fb_iab') || ua.includes('[fb')) return 'Facebook';
+  if (ua.includes('line/')) return 'LINE';
+  const ref = document.referrer.toLowerCase();
+  if (ref.includes('instagram')) return 'Instagram';
+  if (ref.includes('tiktok')) return 'TikTok';
+  if (ref.includes('facebook') || ref.includes('fb.com')) return 'Facebook';
+  if (ref.includes('youtube')) return 'YouTube';
+  if (ref.includes('twitter') || ref.includes('x.com')) return 'Twitter/X';
+  if (ref.includes('line')) return 'LINE';
+  if (ref) return 'Other';
+  return 'Direct';
+}
+
 function trackView() {
   const today = new Date().toISOString().split('T')[0];
   const views = appData.analytics.views;
   const ex = views.find(v => v.date === today);
   if (ex) ex.count++; else { views.push({date:today,count:1}); if(views.length>60) views.splice(0,1); }
-
-  const p = new URLSearchParams(location.search);
-  const ref = p.get('ref') || document.referrer || '';
-  const src = ref.includes('instagram') ? 'Instagram' :
-              ref.includes('tiktok') ? 'TikTok' :
-              ref.includes('facebook') ? 'Facebook' :
-              ref.includes('youtube') ? 'YouTube' :
-              ref.includes('twitter') || ref.includes('x.com') ? 'Twitter/X' :
-              p.get('ref') ? p.get('ref') : ref ? 'Other' : 'Direct';
+  const src = detectSource();
   const refs = appData.analytics.referrers || (appData.analytics.referrers = []);
   const er = refs.find(r => r.source === src);
   if (er) er.count++; else refs.push({source:src,count:1});
@@ -762,27 +806,36 @@ function renderAdminTab(tab) {
 // ─────────────────────────────────────────────
 // DASHBOARD
 // ─────────────────────────────────────────────
+let dashRange = 7;
 function renderDashboard() {
   const el = document.getElementById('section-dashboard');
   const {views, clicks, referrers=[]} = appData.analytics;
-  const total = views.reduce((s,v)=>s+v.count,0);
   const todayStr = new Date().toISOString().split('T')[0];
-  const today = views.find(v=>v.date===todayStr)?.count || 0;
+  const total = views.reduce((s,v)=>s+v.count,0);
+  const todayV = views.find(v=>v.date===todayStr)?.count || 0;
   const totalC = clicks.reduce((s,c)=>s+c.count,0);
-  const top = [...clicks].sort((a,b)=>b.count-a.count)[0];
 
-  const last7 = [];
-  for (let i=6;i>=0;i--) {
+  // Date range
+  const rangeOpts = [{v:7,l:'7 วัน'},{v:30,l:'30 วัน'},{v:60,l:'60 วัน'},{v:0,l:'ทั้งหมด'}];
+  const days = [];
+  const n = dashRange || views.length || 7;
+  for (let i=n-1;i>=0;i--) {
     const d = new Date(); d.setDate(d.getDate()-i);
     const ds = d.toISOString().split('T')[0];
-    last7.push({lbl:d.toLocaleDateString('th-TH',{weekday:'short'}), count: views.find(v=>v.date===ds)?.count||0});
+    const lbl = n <= 7 ? d.toLocaleDateString('th-TH',{weekday:'short'}) :
+                n <= 30 ? d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) :
+                (i % 7 === 0 ? d.toLocaleDateString('th-TH',{day:'numeric',month:'short'}) : '');
+    days.push({ds, lbl, count: views.find(v=>v.date===ds)?.count||0});
   }
-  const maxV = Math.max(...last7.map(d=>d.count),1);
+  const allDays = dashRange === 0 ? views.map(v=>({ds:v.date,lbl:v.date.slice(5),count:v.count})) : days;
+  const maxV = Math.max(...allDays.map(d=>d.count),1);
+  const rangeViews = allDays.reduce((s,d)=>s+d.count,0);
 
   const topClicks = [...clicks].sort((a,b)=>b.count-a.count).slice(0,5);
   const maxC = topClicks[0]?.count||1;
-  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#AAA'];
+  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#F4A261','#AAA'];
   const topRefs = [...referrers].sort((a,b)=>b.count-a.count);
+  const top = topClicks[0];
 
   el.innerHTML = `
     <div class="section-header">
@@ -792,39 +845,46 @@ function renderDashboard() {
 
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">วิวทั้งหมด</div></div>
-      <div class="stat-card"><div class="stat-value">${today}</div><div class="stat-label">วิววันนี้</div></div>
+      <div class="stat-card"><div class="stat-value">${todayV}</div><div class="stat-label">วิววันนี้</div></div>
       <div class="stat-card"><div class="stat-value">${totalC}</div><div class="stat-label">คลิกสินค้า</div></div>
-      <div class="stat-card"><div class="stat-value" style="font-size:14px;padding-top:4px">${top ? top.name.substring(0,10)+(top.name.length>10?'…':'') : '-'}</div><div class="stat-label">สินค้าฮิต</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:13px;padding-top:4px">${top ? top.name.substring(0,12)+(top.name.length>12?'…':'') : '-'}</div><div class="stat-label">สินค้าฮิต</div></div>
     </div>
 
     <div class="card">
-      <div class="card-title">📈 ยอดวิว 7 วันล่าสุด</div>
-      <div class="chart-bars">
-        ${last7.map(d=>`<div class="bar-col"><div class="bar-fill" style="height:${Math.max(4,Math.round(d.count/maxV*80))}px" title="${d.count}"></div><div class="bar-lbl">${d.lbl}</div></div>`).join('')}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+        <div class="card-title" style="margin:0">📈 ยอดวิว <span style="color:var(--primary)">${rangeViews}</span> ครั้ง</div>
+        <div style="display:flex;gap:4px">
+          ${rangeOpts.map(r=>`<button onclick="dashRange=${r.v};renderDashboard()" style="padding:4px 10px;border-radius:20px;border:1.5px solid ${dashRange===r.v?'var(--primary)':'var(--border)'};background:${dashRange===r.v?'var(--primary)':'transparent'};color:${dashRange===r.v?'#fff':'var(--text2)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">${r.l}</button>`).join('')}
+        </div>
       </div>
-      ${last7.every(d=>d.count===0)?'<p class="text-sm text-muted text-center mt-8">ยังไม่มีข้อมูล</p>':''}
+      <div class="chart-bars" style="align-items:flex-end;min-height:90px">
+        ${allDays.map(d=>`<div class="bar-col" style="min-width:${allDays.length>30?'6px':'auto'}"><div class="bar-fill" style="height:${Math.max(3,Math.round(d.count/maxV*80))}px" title="${d.ds}: ${d.count} วิว"></div>${d.lbl?`<div class="bar-lbl">${d.lbl}</div>`:''}</div>`).join('')}
+      </div>
+      ${allDays.every(d=>d.count===0)?'<p class="text-sm text-muted text-center mt-8">ยังไม่มีข้อมูล</p>':''}
     </div>
 
     <div class="card">
-      <div class="card-title">🏆 สินค้าที่คลิกมากที่สุด</div>
+      <div class="card-title">🏆 Top 5 สินค้ายอดคลิก</div>
       ${topClicks.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
       <ul class="click-list">
         ${topClicks.map((c,i)=>`<li class="click-item">
-          <span class="click-rank">#${i+1}</span>
+          <span class="click-rank" style="background:${i===0?'var(--primary)':i===1?'#A0845C':i===2?'#C4956A':'var(--bg2)'};color:${i<3?'#fff':'var(--text2)'}">#${i+1}</span>
           <span class="click-name">${esc(c.name)}</span>
           <div class="click-bar-bg"><div class="click-bar-fg" style="width:${Math.round(c.count/maxC*100)}%"></div></div>
-          <span class="click-count">${c.count}</span>
+          <span class="click-count">${c.count} คลิก</span>
         </li>`).join('')}
       </ul>`}
     </div>
 
     <div class="card">
       <div class="card-title">🔀 แหล่งที่มา</div>
+      <p style="font-size:11px;color:var(--text3);margin-bottom:10px">💡 ใส่ <b>?ref=tiktok</b> ต่อท้าย URL เวลาแชร์ใน TikTok เพื่อให้ระบบรู้จัก</p>
       ${topRefs.length===0?'<p class="text-sm text-muted text-center">ยังไม่มีข้อมูล</p>':`
       <ul class="ref-list">
         ${topRefs.map((r,i)=>`<li class="ref-item">
           <div class="ref-dot" style="background:${refColors[i%refColors.length]}"></div>
           <span style="flex:1;font-size:13px">${esc(r.source)}</span>
+          <div style="flex:2;margin:0 8px;background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div style="height:100%;width:${Math.round(r.count/topRefs[0].count*100)}%;background:${refColors[i%refColors.length]};border-radius:4px"></div></div>
           <span style="font-size:13px;font-weight:800;color:var(--primary)">${r.count}</span>
         </li>`).join('')}
       </ul>`}
@@ -835,7 +895,7 @@ function renderDashboard() {
       <div class="flex gap-8" style="flex-wrap:wrap">
         <button class="btn btn-secondary btn-sm" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
         <button class="btn btn-secondary btn-sm" onclick="adminTab('profile')">✏️ แก้ไขโปรไฟล์</button>
-        <button class="btn btn-secondary btn-sm" onclick="copyLink()">🔗 คัดลอกลิงค์</button>
+        <button class="btn btn-secondary btn-sm" onclick="copyPublicLink()">🔗 คัดลอกลิงค์</button>
       </div>
     </div>
   `;
@@ -1009,21 +1069,42 @@ function renderCategories() {
   `;
 }
 
+const catReorderMode = {};
+function toggleReorder(catId) {
+  catReorderMode[catId] = !catReorderMode[catId];
+  renderCategories();
+}
+
 function renderCatBlock(cat) {
-  const prods = (cat.products||[]).map(p=>`
+  const isReorder = catReorderMode[cat.id];
+  const ps = cat.products || [];
+
+  const gridView = ps.map(p=>`
     <div class="product-admin-card" id="pc-${p.id}">
       ${p.imageUrl
         ? `<img src="${esc(p.imageUrl)}" class="product-admin-img" onerror="this.className='';this.outerHTML='<div class=product-admin-placeholder>📦</div>'">`
         : `<div class="product-admin-placeholder">📦</div>`}
       <div class="product-admin-label">${esc(p.name)}</div>
       <div class="product-admin-actions">
-        <button class="icon-btn icon-btn-move" onclick="moveProduct('${cat.id}','${p.id}',-1)" title="ขึ้น">↑</button>
-        <button class="icon-btn icon-btn-move" onclick="moveProduct('${cat.id}','${p.id}',1)" title="ลง">↓</button>
         <button class="icon-btn icon-btn-edit" onclick="editProduct('${cat.id}','${p.id}')" title="แก้ไข">✏️</button>
         <button class="icon-btn icon-btn-del" onclick="deleteProduct('${cat.id}','${p.id}')" title="ลบ">✕</button>
       </div>
     </div>
   `).join('');
+
+  const listView = ps.map((p,i)=>`
+    <div class="reorder-item">
+      <div class="reorder-thumb">${p.imageUrl?`<img src="${esc(p.imageUrl)}" onerror="this.outerHTML='📦'">`:'📦'}</div>
+      <div class="reorder-name">${esc(p.name)}</div>
+      <div class="reorder-btns">
+        <button class="reorder-btn" onclick="moveProduct('${cat.id}','${p.id}',-1)" ${i===0?'disabled':''}>↑</button>
+        <button class="reorder-btn" onclick="moveProduct('${cat.id}','${p.id}',1)" ${i===ps.length-1?'disabled':''}>↓</button>
+        <button class="reorder-btn edit" onclick="editProduct('${cat.id}','${p.id}')">✏️</button>
+        <button class="reorder-btn del" onclick="deleteProduct('${cat.id}','${p.id}')">✕</button>
+      </div>
+    </div>
+  `).join('');
+
   return `
     <div class="cat-edit-block" id="cb-${cat.id}">
       <div class="cat-edit-header">
@@ -1033,14 +1114,13 @@ function renderCatBlock(cat) {
           <input type="checkbox" ${cat.visible!==false?'checked':''} onchange="toggleCat('${cat.id}',this.checked)">
           <span class="switch-slider"></span>
         </label>
+        <button class="btn btn-sm" style="background:${isReorder?'var(--primary)':'var(--surface2)'};color:${isReorder?'#fff':'var(--text)'};border:1.5px solid ${isReorder?'var(--primary)':'var(--border)'}" onclick="toggleReorder('${cat.id}')">${isReorder?'✓ เสร็จ':'↕ จัดเรียง'}</button>
         <button class="btn btn-danger btn-sm" onclick="deleteCat('${cat.id}')">ลบ</button>
       </div>
-      <div class="product-admin-grid">
-        ${prods}
-        <button class="add-product-btn" onclick="addProduct('${cat.id}')">
-          <span>＋</span><span class="label">เพิ่มสินค้า</span>
-        </button>
-      </div>
+      ${isReorder
+        ? `<div class="reorder-list">${listView}</div>`
+        : `<div class="product-admin-grid">${gridView}<button class="add-product-btn" onclick="addProduct('${cat.id}')"><span>＋</span><span class="label">เพิ่มสินค้า</span></button></div>`
+      }
       <div class="flex gap-8">
         <button class="btn btn-secondary btn-sm" onclick="saveCatName('${cat.id}')">💾 บันทึกชื่อ</button>
         <button class="btn btn-primary btn-sm" onclick="addProduct('${cat.id}')">+ เพิ่มสินค้า</button>
@@ -1487,6 +1567,27 @@ function toast(msg) {
 // ─────────────────────────────────────────────
 // BOOT
 // ─────────────────────────────────────────────
+// Leaf parallax
+(function(){
+  const leaves = [
+    {id:'lf1', speed:0.06}, {id:'lf2', speed:0.04},
+    {id:'lf3', speed:0.08}, {id:'lf4', speed:0.05}, {id:'lf5', speed:0.03}
+  ];
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const sy = window.scrollY;
+      leaves.forEach(l => {
+        const el = document.getElementById(l.id);
+        if (el) el.style.transform = `translateY(${sy * l.speed}px)`;
+      });
+      ticking = false;
+    });
+  }, {passive:true});
+})();
+
 init();
 </script>
 </body>
