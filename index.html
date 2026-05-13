@@ -922,23 +922,15 @@ function renderDashboard() {
   const todayStr = localDateStr();
   const yesterdayStr = localDateStr(new Date(Date.now()-86400000));
 
-  const total = views.reduce((s,v)=>s+v.count,0);
-  const todayV = views.find(v=>v.date===todayStr)?.count || 0;
-  const yesterdayV = views.find(v=>v.date===yesterdayStr)?.count || 0;
-  const totalC = clicks.reduce((s,c)=>s+c.count,0);
-  const ctr = total > 0 ? ((totalC/total)*100).toFixed(1) : '0.0';
-
-  // Trend
-  const trendDay = todayV - yesterdayV;
-  const trendIcon = trendDay > 0 ? '↑' : trendDay < 0 ? '↓' : '→';
-  const trendCls = trendDay > 0 ? 'trend-up' : trendDay < 0 ? 'trend-dn' : 'trend-neu';
-
-  // Date range chart
+  // ── Range Options ──
   const rangeOpts = [{v:7,l:'7 วัน'},{v:14,l:'14 วัน'},{v:30,l:'30 วัน'},{v:0,l:'ทั้งหมด'}];
   const n = dashRange > 0 ? dashRange : Math.max(views.length, 1);
+
+  // ── Build chart days for selected range ──
   const allDays = [];
   if (dashRange === 0) {
-    views.forEach(v => allDays.push({ds:v.date, lbl:v.date.slice(5).replace('-','/'), count:v.count}));
+    const sorted = [...views].sort((a,b)=>a.date.localeCompare(b.date));
+    sorted.forEach(v => allDays.push({ds:v.date, lbl:v.date.slice(5).replace('-','/'), count:v.count}));
   } else {
     for (let i=n-1;i>=0;i--) {
       const d = new Date(); d.setDate(d.getDate()-i);
@@ -948,14 +940,39 @@ function renderDashboard() {
       allDays.push({ds, lbl, count: views.find(v=>v.date===ds)?.count||0});
     }
   }
-  const maxV = Math.max(...allDays.map(d=>d.count),1);
+
+  // ── Computed metrics ──
   const rangeViews = allDays.reduce((s,d)=>s+d.count,0);
+  const todayV = views.find(v=>v.date===todayStr)?.count || 0;
+  const yesterdayV = views.find(v=>v.date===yesterdayStr)?.count || 0;
+  const todayDiff = todayV - yesterdayV;
+
+  // Previous period for % comparison
+  let prevViews = 0;
+  if (dashRange > 0) {
+    for (let i=n*2-1;i>=n;i--) {
+      const d = new Date(); d.setDate(d.getDate()-i);
+      prevViews += views.find(v=>v.date===localDateStr(d))?.count||0;
+    }
+  }
+  const growthPct = prevViews > 0 ? Math.round((rangeViews-prevViews)/prevViews*100) : null;
+  const avgPerDay = allDays.length > 0 ? (rangeViews/allDays.length).toFixed(1) : '0';
+
+  const totalC = clicks.reduce((s,c)=>s+c.count,0);
+  const ctr = rangeViews > 0 ? ((totalC/rangeViews)*100).toFixed(1) : '0.0';
+  const ctrNum = parseFloat(ctr);
+
+  const maxV = Math.max(...allDays.map(d=>d.count), 1);
+  const peakDay = allDays.reduce((b,d)=>d.count>b.count?d:b, {count:0,ds:'',lbl:''});
 
   const topClicks = [...clicks].sort((a,b)=>b.count-a.count).slice(0,5);
-  const maxC = topClicks[0]?.count||1;
-  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#F4A261','#94a3b8'];
+  const maxC = topClicks[0]?.count || 1;
+  const refColors = ['#7C6244','#52B788','#4EA8DE','#E8738A','#9D7EC9','#F4A261'];
   const topRefs = [...referrers].sort((a,b)=>b.count-a.count);
   const totalRefs = topRefs.reduce((s,r)=>s+r.count,0);
+
+  const trendIcon = todayDiff>0?'↑':todayDiff<0?'↓':'→';
+  const trendColor = todayDiff>0?'#52B788':todayDiff<0?'#E8738A':'var(--text3)';
 
   el.innerHTML = `
     <div class="section-header" style="margin-bottom:16px">
@@ -963,44 +980,49 @@ function renderDashboard() {
       <button class="btn btn-secondary btn-sm" onclick="clearAnalytics()">ล้างข้อมูล</button>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-card-icon">👁</div>
-        <div class="stat-card-val">${total.toLocaleString()}</div>
-        <div class="stat-card-label">วิวทั้งหมด</div>
-        <div class="stat-card-accent" style="background:var(--primary)"></div>
+    <!-- Segmented Range Picker — controls everything below -->
+    <div style="background:var(--bg2);border-radius:14px;padding:3px;display:flex;gap:0;margin-bottom:14px">
+      ${rangeOpts.map(r=>`<button onclick="dashRange=${r.v};renderDashboard()" style="flex:1;padding:8px 2px;border-radius:11px;border:none;background:${dashRange===r.v?'var(--surface)':'transparent'};color:${dashRange===r.v?'var(--primary)':'var(--text3)'};font-size:12px;font-weight:${dashRange===r.v?'700':'500'};cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:${dashRange===r.v?'0 1px 5px var(--shadow)':'none'}">${r.l}</button>`).join('')}
+    </div>
+
+    <!-- KPI Grid — all respond to range -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="background:var(--surface);border-radius:14px;padding:16px 14px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">👁 วิว ${dashRange===0?'ทั้งหมด':dashRange+'วัน'}</div>
+        <div style="font-size:30px;font-weight:900;color:var(--text);line-height:1">${rangeViews.toLocaleString()}</div>
+        <div style="margin-top:7px;font-size:11px;font-weight:600;color:${growthPct!==null?(growthPct>=0?'#52B788':'#E8738A'):'var(--text3)'}">
+          ${growthPct!==null?(growthPct>=0?'↑':'↓')+' '+Math.abs(growthPct)+'% vs ช่วงก่อน':'เฉลี่ย '+avgPerDay+' วิว/วัน'}
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">📅</div>
-        <div class="stat-card-val">${todayV}</div>
-        <div class="stat-card-label">วิววันนี้</div>
-        <div class="stat-card-trend ${trendCls}">${trendIcon} ${Math.abs(trendDay)} จากเมื่อวาน</div>
-        <div class="stat-card-accent" style="background:#52B788"></div>
+      <div style="background:var(--green-light);border-radius:14px;padding:16px 14px;border:1px solid var(--green-mid)">
+        <div style="font-size:10px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📌 วันนี้</div>
+        <div style="font-size:30px;font-weight:900;color:var(--text);line-height:1">${todayV}</div>
+        <div style="margin-top:7px;font-size:11px;font-weight:600;color:${trendColor}">${trendIcon} ${Math.abs(todayDiff)} vs เมื่อวาน (${yesterdayV})</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">🖱️</div>
-        <div class="stat-card-val">${totalC.toLocaleString()}</div>
-        <div class="stat-card-label">คลิกสินค้า</div>
-        <div class="stat-card-accent" style="background:#4EA8DE"></div>
+      <div style="background:var(--surface);border-radius:14px;padding:16px 14px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🖱 คลิกสินค้า</div>
+        <div style="font-size:30px;font-weight:900;color:var(--text);line-height:1">${totalC.toLocaleString()}</div>
+        <div style="margin-top:7px;font-size:11px;color:var(--text3)">รวมตั้งแต่เริ่มต้น</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-card-icon">⚡</div>
-        <div class="stat-card-val">${ctr}%</div>
-        <div class="stat-card-label">CTR (คลิก/วิว)</div>
-        <div class="stat-card-accent" style="background:#E8738A"></div>
+      <div style="background:var(--surface);border-radius:14px;padding:16px 14px;border:1px solid var(--border)">
+        <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">⚡ CTR</div>
+        <div style="font-size:30px;font-weight:900;color:${ctrNum>=15?'#52B788':ctrNum>=5?'var(--primary)':'var(--text)'};line-height:1">${ctr}%</div>
+        <div style="margin-top:7px;font-size:11px;color:var(--text3)">${ctrNum>=15?'🔥 ยอดเยี่ยม':ctrNum>=5?'👍 ดี':'💪 พัฒนาได้'}</div>
       </div>
     </div>
 
+    ${peakDay.count>1?`<div style="background:linear-gradient(135deg,rgba(124,98,68,.06),rgba(82,183,136,.06));border-radius:12px;padding:10px 14px;margin-bottom:12px;border:1px solid var(--border);font-size:12px;color:var(--text2)">🏅 วิวสูงสุดในช่วงนี้: <b style="color:var(--primary)">${peakDay.lbl||peakDay.ds}</b> — <b>${peakDay.count} วิว</b></div>`:''}
+
     <!-- Traffic Chart -->
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div>
-          <div style="font-size:14px;font-weight:700;color:var(--text)">📈 Traffic</div>
-          <div style="font-size:12px;color:var(--text3);margin-top:2px">${rangeViews.toLocaleString()} วิว ใน ${dashRange||'ทั้งหมด'} ${dashRange?'วัน':''}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">📈 Traffic รายวัน</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${rangeViews} วิว ใน ${dashRange===0?'ทุกวัน':dashRange+' วันล่าสุด'}</div>
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${rangeOpts.map(r=>`<button onclick="dashRange=${r.v};renderDashboard()" style="padding:5px 11px;border-radius:20px;border:1.5px solid ${dashRange===r.v?'var(--primary)':'var(--border)'};background:${dashRange===r.v?'var(--primary)':'transparent'};color:${dashRange===r.v?'#fff':'var(--text2)'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${r.l}</button>`).join('')}
+        <div style="text-align:right">
+          <div style="font-size:10px;color:var(--text3)">สูงสุด</div>
+          <div style="font-size:17px;font-weight:800;color:var(--primary)">${maxV}</div>
         </div>
       </div>
       <div class="chart-wrap">
@@ -1008,66 +1030,64 @@ function renderDashboard() {
         <div class="chart-bars">
           ${allDays.map(d=>{
             const h = Math.max(3, Math.round(d.count/maxV*110));
-            const isToday = d.ds === todayStr;
-            return `<div class="bar-col"><div class="bar-fill" style="height:${h}px;${isToday?'background:linear-gradient(180deg,#52B788,#6B8A64)':''}" title="${d.ds}: ${d.count} วิว"></div>${d.lbl?`<div class="bar-lbl" style="${isToday?'color:var(--green);font-weight:700':''}">${d.lbl}</div>`:''}</div>`;
+            const isToday = d.ds===todayStr;
+            const isPeak = d.count===maxV && maxV>1 && !isToday;
+            const barBg = isToday?'background:linear-gradient(180deg,#52B788,#3D8A64)':isPeak?'background:linear-gradient(180deg,var(--primary-light),var(--primary))':'';
+            const topLabel = d.count>0&&(isToday||isPeak)?'<span style="font-size:8px;font-weight:700;color:'+(isToday?'#52B788':'var(--primary)')+'">'+d.count+'</span>':'';
+            const barLbl = isToday?'วันนี้':(d.lbl||'');
+            const lblStyle = isToday?'color:var(--green);font-weight:700;font-size:8px':'';
+            return '<div class="bar-col" title="'+d.ds+': '+d.count+' วิว"><div style="height:12px;display:flex;align-items:center;justify-content:center">'+topLabel+'</div><div class="bar-fill" style="height:'+h+'px;'+barBg+';transition:height .3s"></div><div class="bar-lbl" style="'+lblStyle+'">'+barLbl+'</div></div>';
           }).join('')}
         </div>
+      </div>
+      <div style="display:flex;gap:14px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:linear-gradient(180deg,#52B788,#3D8A64)"></div><span style="font-size:10px;color:var(--text3)">วันนี้</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:var(--primary)"></div><span style="font-size:10px;color:var(--text3)">สูงสุด</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:10px;height:10px;border-radius:3px;background:var(--bg2)"></div><span style="font-size:10px;color:var(--text3)">ปกติ</span></div>
       </div>
       ${allDays.every(d=>d.count===0)?'<p style="font-size:12px;color:var(--text3);text-align:center;padding:16px 0">ยังไม่มีข้อมูล — รอให้คนเข้าเว็บก่อนครับ</p>':''}
     </div>
 
     <!-- Top Products -->
-    <div class="card">
+    <div class="card" style="margin-bottom:12px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:14px;font-weight:700;color:var(--text)">🏆 Top 5 สินค้ายอดคลิก</div>
-        <div style="font-size:11px;color:var(--text3)">${totalC} คลิกรวม</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">🏆 Top สินค้า</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:1px">คลิกสะสมทั้งหมด</div>
+        </div>
+        <div style="font-size:18px;font-weight:900;color:var(--primary)">${totalC}<span style="font-size:11px;color:var(--text3);font-weight:400"> คลิก</span></div>
       </div>
       ${topClicks.length===0
-        ? '<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูลคลิก</p>'
-        : `<ul class="click-list">${topClicks.map((c,i)=>{
+        ?'<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูลคลิก</p>'
+        :topClicks.map((c,i)=>{
           const pct = Math.round(c.count/maxC*100);
           const medals = ['🥇','🥈','🥉'];
-          const bg = i===0?'var(--primary)':i===1?'#A0845C':i===2?'#C4956A':'var(--bg2)';
-          const fg = i<3?'#fff':'var(--text2)';
-          return `<li class="click-item">
-            <span class="click-rank" style="background:${bg};color:${fg}">${medals[i]||'#'+String(i+1)}</span>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.name)}</div>
-              <div style="margin-top:5px;background:var(--bg2);border-radius:50px;height:5px"><div style="width:${pct}%;height:100%;background:${bg};border-radius:50px;transition:width .5s"></div></div>
-            </div>
-            <div style="text-align:right;flex-shrink:0">
-              <div style="font-size:15px;font-weight:900;color:var(--primary)">${c.count}</div>
-              <div style="font-size:10px;color:var(--text3)">${pct}%</div>
-            </div>
-          </li>`;}).join('')}</ul>`}
+          const barColors = ['#7C6244','#A0845C','#C4956A','#D4A574','#E0B88A'];
+          return '<div style="margin-bottom:'+(i<topClicks.length-1?'14px':'0')+'"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><div style="display:flex;align-items:center;gap:7px;min-width:0;flex:1"><span style="font-size:'+(i<3?'16':'12')+'px;flex-shrink:0;min-width:22px">'+(i<3?medals[i]:'#'+(i+1))+'</span><span style="font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(c.name)+'</span></div><div style="flex-shrink:0;margin-left:8px"><span style="font-size:15px;font-weight:900;color:var(--primary)">'+c.count+'</span><span style="font-size:10px;color:var(--text3)"> '+pct+'%</span></div></div><div style="background:var(--bg2);border-radius:50px;height:6px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+barColors[i]+';border-radius:50px;transition:width .6s ease"></div></div></div>';
+        }).join('')}
     </div>
 
     <!-- Traffic Sources -->
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div style="font-size:14px;font-weight:700;color:var(--text)">🔀 แหล่งที่มา</div>
-        <div style="font-size:11px;color:var(--text3)">${totalRefs} วิวรวม</div>
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--text)">🔀 แหล่งที่มา</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:1px">ทุก Session ที่บันทึก</div>
+        </div>
+        <div style="font-size:18px;font-weight:900;color:var(--primary)">${totalRefs}<span style="font-size:11px;color:var(--text3);font-weight:400"> วิว</span></div>
       </div>
-      <p style="font-size:11px;color:var(--text3);margin-bottom:12px;padding:8px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green)">💡 เพิ่ม <b>?ref=tiktok</b> ต่อท้าย URL ที่แชร์ใน TikTok เช่น <code style="font-size:10px">...zentum/?ref=tiktok</code></p>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;padding:8px 10px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green)">💡 เพิ่ม <b>?ref=tiktok</b> ต่อท้าย URL เพื่อ track ที่มาจาก TikTok</div>
       ${topRefs.length===0
-        ? '<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูล</p>'
-        : `<ul class="ref-list">${topRefs.map((r,i)=>{
-          const pct = totalRefs > 0 ? Math.round(r.count/totalRefs*100) : 0;
-          return `<li class="ref-item">
-            <div class="ref-dot" style="background:${refColors[i%refColors.length]}"></div>
-            <div style="flex:1;min-width:0">
-              <div style="display:flex;justify-content:space-between;margin-bottom:4px">
-                <span style="font-size:13px;font-weight:600">${esc(r.source)}</span>
-                <span style="font-size:13px;font-weight:800;color:var(--primary)">${r.count} <span style="font-size:10px;color:var(--text3);font-weight:500">(${pct}%)</span></span>
-              </div>
-              <div style="background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${refColors[i%refColors.length]};border-radius:4px;transition:width .5s"></div></div>
-            </div>
-          </li>`;}).join('')}</ul>`}
+        ?'<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูล</p>'
+        :topRefs.map((r,i)=>{
+          const pct = totalRefs>0?Math.round(r.count/totalRefs*100):0;
+          return '<div style="margin-bottom:'+(i<topRefs.length-1?'12px':'0')+'"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><div style="display:flex;align-items:center;gap:7px"><div style="width:10px;height:10px;border-radius:3px;background:'+refColors[i%refColors.length]+';flex-shrink:0"></div><span style="font-size:13px;font-weight:600;color:var(--text)">'+esc(r.source)+'</span></div><div><span style="font-size:13px;font-weight:800;color:var(--primary)">'+r.count+'</span><span style="font-size:10px;color:var(--text3)"> ('+pct+'%)</span></div></div><div style="background:var(--bg2);border-radius:4px;height:6px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+refColors[i%refColors.length]+';border-radius:4px;transition:width .5s"></div></div></div>';
+        }).join('')}
     </div>
 
     <!-- Quick Actions -->
-    <div class="card" style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border:none">
-      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:12px">⚡ Quick Actions</div>
+    <div class="card" style="background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);border:none;margin-bottom:0">
+      <div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:10px">⚡ Quick Actions</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3)" onclick="adminTab('categories')">+ เพิ่มสินค้า</button>
         <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.3)" onclick="adminTab('profile')">✏️ แก้โปรไฟล์</button>
