@@ -1481,6 +1481,10 @@ function renderCatBlock(cat) {
   return `
     <div class="cat-edit-block" id="cb-${cat.id}">
       <div class="cat-edit-header">
+        <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0">
+          <button class="reorder-btn" onclick="moveCat('${cat.id}',-1)" title="เลื่อนขึ้น" style="font-size:13px;padding:2px 7px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;color:var(--text)">↑</button>
+          <button class="reorder-btn" onclick="moveCat('${cat.id}',1)"  title="เลื่อนลง"  style="font-size:13px;padding:2px 7px;border-radius:5px;border:1px solid var(--border);background:var(--surface2);cursor:pointer;color:var(--text)">↓</button>
+        </div>
         <input type="text" class="cat-name-edit" id="cn-${cat.id}" value="${esc(cat.name)}">
         <input type="text" class="cat-emoji-edit" id="ce-${cat.id}" value="${esc(cat.emoji||'📦')}">
         <label class="switch" title="แสดง/ซ่อน">
@@ -1522,6 +1526,15 @@ function saveCatName(id) {
 function toggleCat(id, visible) {
   const cat = appData.categories.find(c=>c.id===id);
   if (cat) { cat.visible = visible; saveData(); }
+}
+function moveCat(id, dir) {
+  const idx = appData.categories.findIndex(c=>c.id===id);
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= appData.categories.length) return;
+  const tmp = appData.categories[idx];
+  appData.categories[idx] = appData.categories[newIdx];
+  appData.categories[newIdx] = tmp;
+  saveData(); renderCategories();
 }
 function moveProduct(catId, pid, dir) {
   const cat = appData.categories.find(c=>c.id===catId);
