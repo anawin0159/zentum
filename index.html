@@ -506,10 +506,36 @@
 // DATA MODEL
 // ─────────────────────────────────────────────
 const STORAGE_KEY = 'zentum_v2';
+const STORAGE_BACKUP_KEY = 'zentum_v2_backup'; // snapshot before Supabase overwrites
 const SESSION_KEY = 'zentum_admin';
 const SUPABASE_URL = 'https://ajqywtocrfevicdrflyi.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ouYFH5QqeAZkB29hLmjL7g_huH2x3LH';
 const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+const SB_BUCKET = 'zentum-images';
+
+// ── Upload image file to Supabase Storage → returns permanent public URL ──
+async function uploadToStorage(file) {
+  // Compress to max 800x800, quality 0.82
+  const base64 = await new Promise(res => compressImage(file, 800, 800, 0.82, res));
+  // Convert base64 → Blob
+  const byteStr = atob(base64.split(',')[1]);
+  const ab = new ArrayBuffer(byteStr.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
+  const blob = new Blob([ab], {type: 'image/jpeg'});
+
+  const path = `products/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${SB_BUCKET}/${path}`, {
+    method: 'POST',
+    headers: {'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'x-upsert': 'true'},
+    body: blob
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error('Storage upload failed: ' + err);
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/${SB_BUCKET}/${path}`;
+}
 
 const DEFAULT_DATA = {
   profile: {
@@ -528,16 +554,83 @@ const DEFAULT_DATA = {
   ],
   categories: [
     {id:'cat1',name:'Desksetup',emoji:'🖥️',visible:true,products:[
-      {id:'p1',name:'Desk',imageUrl:'',affiliateUrl:'#',description:''},
-      {id:'p2',name:'MSI 2k Monitor',imageUrl:'',affiliateUrl:'#',description:''},
-      {id:'p3',name:'Light Bar',imageUrl:'',affiliateUrl:'#',description:''},
-      {id:'p4',name:'Speaker',imageUrl:'',affiliateUrl:'#',description:''},
-      {id:'p5',name:'Logitech Mouse',imageUrl:'',affiliateUrl:'#',description:''},
-      {id:'p6',name:'Aula F75',imageUrl:'',affiliateUrl:'#',description:''}
+      {id:'p1', name:'Desk',                        imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p2', name:'MSI 2k Monitor',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p3', name:'Light Bar ไฟตัดแสง',          imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p4', name:'Edifier MR3 ลำโพง',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p5', name:'Aula F75 Keyboard',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p6', name:'แขนจับไมค์ Maono',            imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p7', name:'เมาส์ Logitech',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p8', name:'ชั้นวางจอไม้ยางพารา',         imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p9', name:'แท่นวางหนังสือไม้',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p10',name:'รางซ่อนปลั๊กไฟตะกั่ว',       imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p11',name:'Bewell ที่วางแขน',            imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p12',name:'ที่วางเท้า',                  imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p13',name:'เก้าอี้ Expanse W901',        imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p14',name:'แขนจับจอ cs98',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'p15',name:'ลิ้นชักพลาสติก',             imageUrl:'',affiliateUrl:'#',description:''}
     ]},
-    {id:'cat2',name:'Gadget, Charger',emoji:'⚡',visible:true,products:[]},
-    {id:'cat3',name:'Decor, Light & Aroma',emoji:'🕯️',visible:true,products:[]},
-    {id:'cat4',name:'เครื่องใช้ & Samsung',emoji:'📱',visible:true,products:[]}
+    {id:'cat2',name:'Gadget',emoji:'⚡',visible:true,products:[
+      {id:'g1', name:'Soundcore Select 2',          imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g2', name:'Soundcore v20i',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g3', name:'Soundcore r50i nc',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g4', name:'Cuktech ชาร์จ',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g5', name:'VXGE เต้าชาร์จ',             imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g6', name:'Powerbank Cuktech',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g7', name:'Solex ล็อคสเตมบร',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g8', name:'GPS ติดตาม Xiaomi',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g9', name:'External HDD 2TB',            imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g10',name:'USB HUB 6-in-1',             imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g11',name:'ชาร์จต่อออก Thunderbolt ZTEC ZC621', imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'g12',name:'USB-C to Thunderbolt',        imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat3',name:'เครื่องใช้ & Samsung',emoji:'📱',visible:true,products:[
+      {id:'s1', name:'Samsung S25 Ultra',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'s2', name:'Photocube Smart Display',     imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'s3', name:'กระจกเงา',                   imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'s4', name:'สายชาร์จสำนักงาน',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'s5', name:'โปรเจคเตอร์ Konka',          imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat4',name:'กระเป๋า&Case',emoji:'📦',visible:true,products:[
+      {id:'c1', name:'เคส Ringke Fusion',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'c2', name:'กระเป๋า Macbook',            imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'c3', name:'ฟิล์มกันสะก้อน AntiMonster', imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat5',name:'เฟอร์นิเจอร์&เครื่องนอน',emoji:'🛋️',visible:true,products:[
+      {id:'f1', name:'ที่วางเท้าพร้อมเบาะ',        imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'f2', name:'Patara โซฟา',                imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'f3', name:'ที่นอน Sleep Happy',          imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'f4', name:'ชุดผ้านวม Quite&Co',         imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'f5', name:'ผ้าม่านโปร่ง สีขาว',         imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'f6', name:'พรม',                        imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat6',name:'Decor, Light & Aroma',emoji:'🕯️',visible:true,products:[
+      {id:'d1', name:'โคมไฟอ่านหนังสือ',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'d2', name:'โคมไฟ แบบแท่ง',             imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'d3', name:'Eaker หลอดไฟอัจฉริยะ',      imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'d4', name:'ต้นไม้ปลอมกระถางเล็ก',      imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'d5', name:'Iwachi หลอดไฟอัจฉริยะ',     imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'d6', name:'โคมไฟแนว Midcentury',        imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat7',name:'เครื่องใช้ไฟฟ้า & ในบ้าน',emoji:'🔌',visible:true,products:[]},
+    {id:'cat8',name:'มุมออกกำลังกาย',emoji:'💪',visible:true,products:[
+      {id:'m1', name:'บาร์ปรับระดับ HFT',          imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'m2', name:'แผ่นโฟมยางจิ๊กซอ',          imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'m3', name:'ชุดบาร์เบลเหล็ก',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'m4', name:'ชุดดัมเบล 40kg',             imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'m5', name:'เสื่อโยคะ',                 imageUrl:'',affiliateUrl:'#',description:''}
+    ]},
+    {id:'cat9',name:'หนังสือที่อยากแชร์',emoji:'📚',visible:true,products:[
+      {id:'b1', name:'Why Has Nobody Told Me This Before', imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b2', name:'การเงิน ความคิด บังคับ',     imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b3', name:'The 4-Hour Workweek',         imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b4', name:'เก่งแบบมีระบบ How to',       imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b5', name:'Start With Why',              imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b6', name:'The Almanack of Naval Ravikant', imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b7', name:'The Millionaire Fastlane',    imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b8', name:'Rich Dad Poor Dad',           imageUrl:'',affiliateUrl:'#',description:''},
+      {id:'b9', name:'Rich Dad Cash Flow Quadrant', imageUrl:'',affiliateUrl:'#',description:''}
+    ]}
   ],
   theme: {preset:'nature',primaryColor:'#7C6244',bgColor:'#F8F5F0'},
   settings: {password:'zentum',siteTitle:'ZenTum'},
@@ -571,24 +664,67 @@ function saveData() {
 }
 async function saveToSupabase() {
   try {
-    await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1', {
+    const now = new Date().toISOString();
+    const body = JSON.stringify({data: appData, updated_at: now});
+    const kb = Math.round(body.length / 1024);
+    const res = await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1', {
       method:'PATCH',
       headers:{...SB_HEADERS,'Prefer':'return=minimal'},
-      body: JSON.stringify({data: appData, updated_at: new Date().toISOString()})
+      body
     });
-  } catch(e) { console.warn('Supabase save failed', e); }
+    if (!res.ok) {
+      const errText = await res.text().catch(()=>'');
+      console.error('Supabase save failed', res.status, errText);
+      if (res.status === 413 || kb > 500) {
+        toast('⚠️ บันทึกไม่สำเร็จ — ข้อมูลใหญ่เกิน (' + kb + 'KB)');
+      } else {
+        toast('⚠️ บันทึกไม่สำเร็จ (' + res.status + ') ตรวจสอบการเชื่อมต่อ');
+      }
+      return false;
+    }
+    // On success, stamp the local save time so loadFromSupabase knows this is up-to-date
+    localStorage.setItem(STORAGE_KEY + '_ts', now);
+    return true;
+  } catch(e) {
+    console.warn('Supabase save error', e);
+    toast('⚠️ เชื่อมต่อ Supabase ไม่ได้ ข้อมูลถูกเก็บในเครื่องแล้ว');
+    return false;
+  }
 }
 async function loadFromSupabase() {
   try {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1&select=data', {headers: SB_HEADERS});
+    // Fetch both data and updated_at so we can compare timestamps
+    const res = await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1&select=data,updated_at', {headers: SB_HEADERS});
+    if (!res.ok) return false;
     const rows = await res.json();
-    if (rows && rows[0] && rows[0].data && Object.keys(rows[0].data).length > 0) {
-      appData = rows[0].data;
+    if (!rows || !rows[0] || !rows[0].data || Object.keys(rows[0].data).length === 0) return false;
+
+    const sbData = rows[0].data;
+    const sbTs = rows[0].updated_at ? new Date(rows[0].updated_at).getTime() : 0;
+    const localTs = new Date(localStorage.getItem(STORAGE_KEY + '_ts') || 0).getTime();
+
+    // Always save a backup of current localStorage before potentially overwriting
+    const currentLocal = localStorage.getItem(STORAGE_KEY);
+    if (currentLocal) {
+      localStorage.setItem(STORAGE_BACKUP_KEY, currentLocal);
+      localStorage.setItem(STORAGE_BACKUP_KEY + '_ts', new Date().toISOString());
+    }
+
+    // Only overwrite localStorage if Supabase data is strictly newer than our last successful save
+    if (sbTs >= localTs) {
+      appData = sbData;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
       return true;
+    } else {
+      // localStorage is newer (e.g. Supabase save failed last time) — re-push to Supabase
+      console.info('Local data is newer than Supabase — re-syncing up');
+      await saveToSupabase();
+      return false;
     }
-  } catch(e) { console.warn('Supabase load failed', e); }
-  return false;
+  } catch(e) {
+    console.warn('Supabase load failed', e);
+    return false;
+  }
 }
 
 let appData = loadData();
@@ -621,11 +757,43 @@ function applyTheme(presetId) {
 async function init() {
   // Load from Supabase first, fall back to localStorage
   await loadFromSupabase();
+
+  // ?restore=1 — push default product list to Supabase (one-time recovery, requires admin password)
+  const p = new URLSearchParams(location.search);
+  if (p.get('restore') === '1') {
+    const pw = prompt('🔒 กรุณาใส่รหัสผ่าน Admin เพื่อยืนยันการ Restore:');
+    const correctPw = (appData.settings && appData.settings.password) || DEFAULT_DATA.settings.password;
+    if (pw !== correctPw) {
+      alert('❌ รหัสผ่านไม่ถูกต้อง — ยกเลิก Restore');
+      history.replaceState(null,'',location.pathname+'?admin=1');
+    } else {
+      const totalProducts = DEFAULT_DATA.categories.reduce((s,c)=>s+c.products.length, 0);
+      const totalCats = DEFAULT_DATA.categories.length;
+      const confirmed = confirm(`⚠️ Restore จะแทนที่หมวดหมู่และสินค้าทั้งหมดด้วย Default Data\n(${totalCats} หมวด / ${totalProducts} สินค้า)\n\nโปรไฟล์ / Social / Analytics จะยังคงอยู่\n\nดำเนินการต่อ?`);
+      if (!confirmed) {
+        history.replaceState(null,'',location.pathname+'?admin=1');
+      } else {
+        const restored = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        // Keep existing analytics + settings + profile from current appData
+        restored.analytics  = appData.analytics  || restored.analytics;
+        restored.settings   = appData.settings   || restored.settings;
+        restored.profile    = appData.profile    || restored.profile;
+        restored.socials    = appData.socials    || restored.socials;
+        appData = restored;
+        const ok = await saveToSupabase();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        alert(ok
+          ? `✅ Restore สำเร็จ!\n${totalCats} หมวดหมู่ / ${totalProducts} สินค้าถูกกู้คืนแล้ว\nกด OK แล้วไปเพิ่มรูปและลิงก์ได้เลย`
+          : '❌ Restore ไม่สำเร็จ ตรวจสอบ Supabase');
+        history.replaceState(null,'',location.pathname+'?admin=1');
+      }
+    }
+  }
+
   applyTheme(appData.theme.preset || 'nature');
   document.getElementById('page-title').textContent = appData.settings.siteTitle || 'ZenTum';
   document.querySelector('.admin-topbar-brand').textContent = '🌿 ' + (appData.settings.siteTitle || 'ZenTum');
-  const p = new URLSearchParams(location.search);
-  if (p.get('admin') === '1' || location.hash === '#admin') {
+  if (p.get('admin') === '1' || p.get('restore') === '1' || location.hash === '#admin') {
     showAdminLayout();
   } else {
     showPublicPage();
@@ -707,7 +875,7 @@ function detectSource() {
     return refParam.charAt(0).toUpperCase() + refParam.slice(1);
   }
   const ua = navigator.userAgent.toLowerCase();
-  if (ua.includes('tiktok') || ua.includes('bytedancewebview') || ua.includes('musical_ly')) return 'TikTok';
+  if (ua.includes('tiktok') || ua.includes('bytedancewebview') || ua.includes('bytedance') || ua.includes('musical_ly') || ua.includes('tt_webview') || ua.includes('tiktokstub')) return 'TikTok';
   if (ua.includes('instagram')) return 'Instagram';
   if (ua.includes('fban') || ua.includes('fbav') || ua.includes('fb_iab') || ua.includes('[fb')) return 'Facebook';
   if (ua.includes('line/')) return 'LINE';
@@ -730,7 +898,10 @@ function trackView() {
   const today = localDateStr();
   const views = appData.analytics.views;
   const ex = views.find(v => v.date === today);
-  if (ex) ex.count++; else { views.push({date:today,count:1}); if(views.length>90) views.splice(0,1); }
+  if (ex) ex.count++; else {
+    views.push({date:today,count:1});
+    if (views.length > 365) views.splice(0,1); // keep 1 year of daily data
+  }
   const src = detectSource();
   const refs = appData.analytics.referrers || (appData.analytics.referrers = []);
   const er = refs.find(r => r.source === src);
@@ -1076,7 +1247,13 @@ function renderDashboard() {
         </div>
         <div style="font-size:18px;font-weight:900;color:var(--primary)">${totalRefs}<span style="font-size:11px;color:var(--text3);font-weight:400"> วิว</span></div>
       </div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px;padding:8px 10px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green)">💡 เพิ่ม <b>?ref=tiktok</b> ต่อท้าย URL เพื่อ track ที่มาจาก TikTok</div>
+      <div style="margin-bottom:12px;padding:10px 12px;background:var(--green-light);border-radius:10px;border-left:3px solid var(--green)">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:8px">💡 วาง link นี้ใน TikTok bio แทน link ปกติ เพื่อ track ได้แม่นยำ</div>
+        <div style="display:flex;align-items:center;gap:6px;background:var(--surface);border-radius:8px;padding:7px 10px;border:1px solid var(--green-mid)">
+          <code style="font-size:10px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${location.origin+location.pathname}?ref=tiktok</code>
+          <button onclick="navigator.clipboard.writeText('${location.origin+location.pathname}?ref=tiktok').then(()=>toast('Copy แล้ว! ไปวางใน TikTok bio ได้เลย 🎉'))" style="flex-shrink:0;padding:4px 10px;border-radius:6px;border:none;background:var(--green);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">Copy</button>
+        </div>
+      </div>
       ${topRefs.length===0
         ?'<p style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">ยังไม่มีข้อมูล</p>'
         :topRefs.map((r,i)=>{
@@ -1389,7 +1566,7 @@ function openProductModal(catId, pid) {
       <div class="form-group">
         <label>รูปสินค้า</label>
         <input type="hidden" id="m-img-data" value="${esc(existingImg)}">
-        <input type="file" id="m-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'m-img-data','m-img-zone',600,600,0.82)">
+        <input type="file" id="m-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(this,'m-img-data','m-img-zone',400,400,0.72)">
         <label class="img-upload-zone img-upload-sq" id="m-img-zone" onclick="document.getElementById('m-img-file').click()" style="max-width:140px">
           ${existingImg
             ? `<img class="upload-preview-img" src="${esc(existingImg)}" id="m-img-preview"><div class="upload-overlay">📷 เปลี่ยนรูป</div>`
@@ -1440,27 +1617,43 @@ function compressImage(file, maxW, maxH, quality, cb) {
 function handleImgUpload(input, dataId, zoneId, maxW, maxH, quality) {
   const file = input.files[0]; if (!file) return;
   const zone = document.getElementById(zoneId);
-  if (zone) zone.style.opacity = '0.5';
-  compressImage(file, maxW, maxH, quality, base64 => {
-    // Save to hidden input
+  // Show loading state
+  if (zone) {
+    zone.style.opacity = '0.7';
+    zone.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px"><div style="font-size:22px">⏳</div><div style="font-size:11px;color:var(--text3)">กำลังอัพโหลด...</div></div>';
+  }
+  uploadToStorage(file).then(url => {
     const dataEl = document.getElementById(dataId);
-    if (dataEl) dataEl.value = base64;
-    // Update zone UI
+    if (dataEl) dataEl.value = url;
     if (zone) {
       zone.style.opacity = '1';
-      zone.innerHTML = `<img class="upload-preview-img" src="${base64}"><div class="upload-overlay">📷 เปลี่ยนรูป</div>`;
+      zone.innerHTML = `<img class="upload-preview-img" src="${url}"><div class="upload-overlay">📷 เปลี่ยนรูป</div>`;
     }
+    toast('✓ อัพโหลดรูปสำเร็จ');
+  }).catch(err => {
+    console.error(err);
+    if (zone) {
+      zone.style.opacity = '1';
+      zone.innerHTML = '<div class="upload-placeholder"><div class="upload-icon">⚠️</div><div class="upload-hint" style="color:#dc2626">อัพโหลดไม่สำเร็จ</div><div class="upload-sub">แตะเพื่อลองใหม่</div></div>';
+    }
+    toast('อัพโหลดรูปไม่สำเร็จ — ตรวจสอบ Supabase Storage');
   });
   input.value = '';
 }
 
 function handleProfileImgUpload(input, dataId, previewId, maxW, maxH, quality) {
   const file = input.files[0]; if (!file) return;
-  compressImage(file, maxW, maxH, quality, base64 => {
+  const prev = document.getElementById(previewId);
+  if (prev) prev.style.opacity = '0.4';
+  uploadToStorage(file).then(url => {
     const dataEl = document.getElementById(dataId);
-    if (dataEl) dataEl.value = base64;
-    const prev = document.getElementById(previewId);
-    if (prev) prev.src = base64;
+    if (dataEl) dataEl.value = url;
+    if (prev) { prev.src = url; prev.style.opacity = '1'; prev.style.display = 'block'; }
+    toast('✓ อัพโหลดรูปสำเร็จ');
+  }).catch(err => {
+    console.error(err);
+    if (prev) prev.style.opacity = '1';
+    toast('อัพโหลดรูปไม่สำเร็จ — ตรวจสอบ Supabase Storage');
   });
   input.value = '';
 }
@@ -1627,9 +1820,10 @@ function renderSettings() {
         <button class="btn btn-secondary btn-sm" onclick="exportData()">📤 Export JSON</button>
         <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">📥 Import JSON</button>
         <input type="file" id="import-file" accept=".json" onchange="importData(this)" style="display:none">
+        <button class="btn btn-secondary btn-sm" onclick="restoreFromLocalBackup()" style="border-color:var(--accent)">🔄 กู้คืน Backup</button>
         <button class="btn btn-danger btn-sm" onclick="resetAll()">🗑️ Reset ทั้งหมด</button>
       </div>
-      <div class="help-text mt-8">Export เพื่อสำรองข้อมูล / Import เพื่อกู้คืน</div>
+      <div class="help-text mt-8">⭐ Export ทุกครั้งหลังเพิ่มสินค้าสำคัญ — ป้องกันข้อมูลหาย<br>🔄 "กู้คืน Backup" = คืนค่าก่อนหน้าที่ Supabase เขียนทับล่าสุด</div>
     </div>
 
     <div class="card" style="border:2px solid var(--green-mid);background:var(--green-light)">
@@ -1730,11 +1924,25 @@ function importData(input) {
   reader.onload = e => {
     try {
       const imported = JSON.parse(e.target.result);
-      if (!confirm('Import ข้อมูล? ข้อมูลปัจจุบันจะถูกแทนที่')) return;
+      // Validate required structure before importing
+      const required = ['categories','settings','profile','socials','analytics','theme'];
+      const missing = required.filter(k => !(k in imported));
+      if (missing.length > 0) {
+        toast('❌ ไฟล์ไม่ถูกต้อง — ขาด: ' + missing.join(', '));
+        return;
+      }
+      if (!Array.isArray(imported.categories)) { toast('❌ ไฟล์เสีย — categories ไม่ถูกต้อง'); return; }
+      if (!imported.settings.password) { toast('❌ ไฟล์เสีย — ไม่พบ settings.password'); return; }
+      const cats = imported.categories.length;
+      const prods = imported.categories.reduce((s,c)=>s+(c.products?.length||0),0);
+      if (!confirm(`Import ข้อมูล?\n${cats} หมวดหมู่ / ${prods} สินค้า\nข้อมูลปัจจุบันจะถูกแทนที่ทั้งหมด`)) return;
+      // Backup before overwriting
+      localStorage.setItem(STORAGE_BACKUP_KEY, JSON.stringify(appData));
+      localStorage.setItem(STORAGE_BACKUP_KEY + '_ts', new Date().toISOString());
       appData = imported;
       saveData(); applyTheme(appData.theme?.preset||'nature');
       renderAdminTab(currentTab); toast('Import สำเร็จ ✓');
-    } catch { toast('ไฟล์ไม่ถูกต้อง'); }
+    } catch { toast('❌ ไฟล์ไม่ถูกต้อง — parse JSON ไม่ได้'); }
   };
   reader.readAsText(file);
   input.value = '';
@@ -1744,9 +1952,26 @@ function resetAll() {
   if (!confirm('Reset ทั้งหมด? ข้อมูลทั้งหมดจะหายไป')) return;
   if (!confirm('ยืนยันอีกครั้ง — ไม่สามารถย้อนกลับได้')) return;
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(STORAGE_KEY + '_ts');
   appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
   saveData(); applyTheme('nature');
   renderAdminTab(currentTab); toast('Reset เรียบร้อย');
+}
+
+function restoreFromLocalBackup() {
+  try {
+    const raw = localStorage.getItem(STORAGE_BACKUP_KEY);
+    const ts = localStorage.getItem(STORAGE_BACKUP_KEY + '_ts');
+    if (!raw) { toast('ไม่พบ Backup ในเครื่อง'); return; }
+    const backup = JSON.parse(raw);
+    const cats = backup.categories?.length || 0;
+    const prods = backup.categories?.reduce((s,c)=>s+(c.products?.length||0),0) || 0;
+    const tsStr = ts ? new Date(ts).toLocaleString('th-TH') : 'ไม่ทราบ';
+    if (!confirm(`กู้คืน Backup จาก: ${tsStr}\n(${cats} หมวด / ${prods} สินค้า)\n\nข้อมูลปัจจุบันจะถูกแทนที่`)) return;
+    appData = backup;
+    saveData(); applyTheme(appData.theme?.preset||'nature');
+    renderAdminTab(currentTab); toast('กู้คืน Backup สำเร็จ ✓');
+  } catch { toast('❌ Backup เสีย ไม่สามารถกู้คืนได้'); }
 }
 
 // ─────────────────────────────────────────────
