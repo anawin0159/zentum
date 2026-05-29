@@ -471,7 +471,7 @@
         <button class="nav-btn" data-tab="settings" onclick="adminTab('settings')">⚙️ ตั้งค่า</button>
       </nav>
       <div class="topbar-actions">
-        <button class="topbar-btn" onclick="showPublicPage()">👁 ดูหน้าเว็บ</button>
+        <button class="topbar-btn" onclick="window.open(location.origin+location.pathname,'_blank')">👁 ดูหน้าเว็บ</button>
         <button class="topbar-btn topbar-share-btn" onclick="copyPublicLink()" id="share-btn">🔗 แชร์ลิงก์</button>
         <button class="topbar-btn" onclick="doLogout()">ออก</button>
       </div>
@@ -695,7 +695,6 @@ async function saveToSupabase() {
 }
 async function loadFromSupabase() {
   try {
-    // Fetch both data and updated_at so we can compare timestamps
     const res = await fetch(SUPABASE_URL+'/rest/v1/zentum_data?id=eq.1&select=data,updated_at', {headers: SB_HEADERS});
     if (!res.ok) return false;
     const rows = await res.json();
@@ -705,24 +704,24 @@ async function loadFromSupabase() {
     const sbTs = rows[0].updated_at ? new Date(rows[0].updated_at).getTime() : 0;
     const localTs = new Date(localStorage.getItem(STORAGE_KEY + '_ts') || 0).getTime();
 
-    // Always save a backup of current localStorage before potentially overwriting
+    // Backup current localStorage before overwriting
     const currentLocal = localStorage.getItem(STORAGE_KEY);
     if (currentLocal) {
       localStorage.setItem(STORAGE_BACKUP_KEY, currentLocal);
       localStorage.setItem(STORAGE_BACKUP_KEY + '_ts', new Date().toISOString());
     }
 
-    // Only overwrite localStorage if Supabase data is strictly newer than our last successful save
-    if (sbTs >= localTs) {
-      appData = sbData;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-      return true;
-    } else {
-      // localStorage is newer (e.g. Supabase save failed last time) — re-push to Supabase
-      console.info('Local data is newer than Supabase — re-syncing up');
-      await saveToSupabase();
+    if (localTs > sbTs) {
+      // Local is newer — push up to Supabase silently
+      console.info('Local is newer, re-pushing to Supabase');
+      saveToSupabase();
       return false;
     }
+
+    // Supabase is newer or equal — use it
+    appData = sbData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+    return true;
   } catch(e) {
     console.warn('Supabase load failed', e);
     return false;
