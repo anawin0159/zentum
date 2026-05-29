@@ -659,7 +659,9 @@ function loadData() {
 }
 function saveData() {
   if (STATIC_MODE) return;
+  const now = new Date().toISOString();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+  localStorage.setItem(STORAGE_KEY + '_ts', now); // stamp immediately — don't wait for Supabase
   saveToSupabase();
 }
 async function saveToSupabase() {
